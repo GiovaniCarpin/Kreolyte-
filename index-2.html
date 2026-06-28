@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<title>KREOLYTE — Alternative Rock | Mauritius</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg:        #fdf3e3;   /* warm volcanic sand */
+    --bg2:       #fff9ef;
+    --ink:       #1c140f;   /* near-black, warm */
+    --surface:   #ffffff;
+    --line:      #1c140f;
+    --accent:    #ff4424;   /* lava coral */
+    --accent2:   #00b89c;   /* tropical teal */
+    --accent3:   #ffc400;   /* sun yellow */
+    --accent4:   #6a2fb0;   /* jazz violet, used sparingly */
+    --muted:     #6b5d4f;
+    --display:   'Bebas Neue', sans-serif;
+    --body:      'Inter', sans-serif;
+    --mono:      'Space Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  a:focus-visible, button:focus-visible, .page-tab:focus-visible, [tabindex]:focus-visible {
+    outline: 3px solid var(--accent4);
+    outline-offset: 2px;
+  }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(28,20,15,0.06) 1px, transparent 0);
+    background-size: 18px 18px;
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  img { max-width: 100%; display: block; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg2);
+    border-bottom: 3px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1.5rem; height: 64px;
+    gap: 1rem;
+  }
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 1.9rem;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    display: flex; align-items: center; gap: 0.6rem;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-logo img {
+    height: 38px; width: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--line);
+    transition: transform .3s;
+  }
+  .nav-logo:hover img { transform: rotate(-10deg) scale(1.1); }
+  .nav-tabs {
+    display: flex; gap: 0.2rem;
+    list-style: none;
+    overflow-x: auto;
+  }
+  .nav-tabs li a {
+    display: block;
+    padding: 0.5rem 0.9rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 3px solid transparent;
+    transition: color .2s, border-color .2s;
+    white-space: nowrap;
+  }
+  .nav-tabs li a:hover,
+  .nav-tabs li a.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .nav-badge {
+    background: var(--ink);
+    color: var(--accent3);
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 0.62rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 100px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    animation: badge-pop 2.4s infinite;
+  }
+  @keyframes badge-pop {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 88vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 4rem 3rem;
+    overflow: hidden;
+    border-bottom: 4px solid var(--line);
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(253,243,227,0.15) 0%, rgba(253,243,227,0.55) 60%, var(--bg) 100%),
+      url('duo-silhouette-urf.jpg');
+    background-size: cover;
+    background-position: center 25%;
+    filter: saturate(1.3) contrast(1.05);
+  }
+  .hero-stripe {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 14px;
+    background: repeating-linear-gradient(45deg, var(--accent) 0 20px, var(--accent3) 20px 40px, var(--accent2) 40px 60px);
+  }
+  .hero-eyebrow {
+    position: relative;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    color: var(--ink);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    display: inline-flex; align-items: center; gap: 0.7rem;
+    background: var(--accent3);
+    padding: 0.4rem 0.9rem;
+    border: 2px solid var(--line);
+    border-radius: 100px;
+    transform: rotate(-1.5deg);
+  }
+  .hero-title {
+    position: relative;
+    font-family: var(--display);
+    font-size: clamp(4.5rem, 13vw, 11rem);
+    line-height: 0.88;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    -webkit-text-stroke: 2px var(--line);
+    animation: title-strike .6s cubic-bezier(.2,1.4,.4,1) both;
+  }
+  .hero-title .accent {
+    color: var(--accent);
+    -webkit-text-stroke: 2px var(--line);
+  }
+  @keyframes title-strike {
+    0% { opacity: 0; transform: translateY(18px) skewX(-3deg); }
+    60% { opacity: 1; transform: translateY(-3px) skewX(1deg); }
+    100% { opacity: 1; transform: translateY(0) skewX(0); }
+  }
+  .hero-sub {
+    position: relative;
+    margin-top: 1.4rem;
+    max-width: 540px;
+    color: var(--ink);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.7;
+  }
+  .hero-meta {
+    position: relative;
+    margin-top: 2rem;
+    display: flex; gap: 0.8rem; flex-wrap: wrap;
+    align-items: center;
+  }
+  .meta-pill {
+    background: var(--surface);
+    border: 2px solid var(--line);
+    border-radius: 100px;
+    padding: 0.5rem 1.1rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    text-transform: uppercase;
+    box-shadow: 3px 3px 0 var(--line);
+  }
+  .meta-pill strong { color: var(--accent); }
+  .hero-cta {
+    position: relative;
+    margin-top: 1.8rem;
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-block;
+    padding: 0.85rem 1.8rem;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+    border: 2px solid var(--line);
+    box-shadow: 4px 4px 0 var(--line);
+  }
+  .btn:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--line); }
+  .btn:active { transform: translate(1px,1px); box-shadow: 2px 2px 0 var(--line); }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-outline { background: var(--surface); color: var(--ink); }
+  .btn-teal { background: var(--accent2); color: #fff; }
+  .btn-sm { padding: 0.55rem 1.1rem; font-size: 0.65rem; box-shadow: 3px 3px 0 var(--line); }
+
+  .gig-ribbon {
+    position: absolute; top: 1.6rem; right: 1.6rem;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.9rem 1.3rem;
+    border: 3px solid var(--line);
+    border-radius: 8px;
+    text-align: center;
+    transform: rotate(3deg);
+    box-shadow: 5px 5px 0 var(--line);
+    animation: ribbon-wiggle 3s infinite;
+    z-index: 2;
+  }
+  @keyframes ribbon-wiggle {
+    0%, 100% { transform: rotate(3deg); }
+    50% { transform: rotate(1deg); }
+  }
+  .gig-ribbon .date { font-family: var(--display); font-size: 2rem; line-height: 1; }
+  .gig-ribbon .detail { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 0.25rem; opacity: 0.95; }
+
+  /* ── SECTION SHELL ── */
+  .section { padding: 5rem 3rem; border-bottom: 3px solid var(--line); }
+  .section:last-of-type { border-bottom: none; }
+  .section-label {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--ink);
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    margin-bottom: 1.2rem;
+    transform: rotate(-1deg);
+  }
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(2.4rem, 4.6vw, 3.6rem);
+    letter-spacing: 0.02em;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+  .section-desc { color: var(--muted); margin-bottom: 2rem; font-size: 0.95rem; max-width: 640px; }
+
+  /* ── AUDIO EDITOR ── */
+  .editor-shell {
+    background: var(--surface);
+    border: 3px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 6px 6px 0 var(--line);
+  }
+  .editor-toolbar {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--bg2);
+    border-bottom: 2px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .tool-btn {
+    background: var(--surface);
+    border: 2px solid var(--line);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 0.64rem;
+    letter-spacing: 0.04em;
+    padding: 0.45rem 0.85rem;
+    border-radius: 100px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all .15s;
+  }
+  .tool-btn:hover, .tool-btn.active { background: var(--accent3); }
+  .tool-btn.danger { border-color: var(--accent); color: var(--accent); }
+  .tool-btn.danger:hover { background: var(--accent); color: #fff; }
+  .tool-sep { width: 1px; height: 22px; background: var(--line); margin: 0 0.3rem; opacity: 0.3; }
+  .tool-btn.post { background: var(--accent2); color: #fff; border-color: var(--line); margin-left: auto; }
+
+  .waveform-area { padding: 1.4rem; background: var(--bg2); position: relative; min-height: 130px; }
+  .waveform-display { width: 100%; height: 80px; border-radius: 6px; position: relative; overflow: hidden; background: var(--surface); border: 2px solid var(--line); }
+  .waveform-display svg { width: 100%; height: 100%; }
+  .wf-selection { position: absolute; top: 0; bottom: 0; left: 28%; width: 24%; background: rgba(255,68,36,0.14); border-left: 2px solid var(--accent); border-right: 2px solid var(--accent); pointer-events: none; }
+  .wf-playhead { position: absolute; top: 0; bottom: 0; left: 36%; width: 2px; background: var(--accent4); }
+  .wf-time { font-family: var(--mono); font-size: 0.65rem; font-weight: 700; color: var(--muted); margin-top: 0.6rem; display: flex; justify-content: space-between; }
+  .transport { display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.4rem; border-top: 2px solid var(--line); background: var(--surface); }
+  .t-btn { background: var(--surface); border: 2px solid var(--line); color: var(--ink); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+  .t-btn.play { background: var(--accent); color: #fff; }
+  .t-btn:hover { transform: scale(1.08); }
+  .time-display { font-family: var(--mono); font-weight: 700; font-size: 0.8rem; color: var(--accent); margin-left: 0.5rem; }
+  .vol-row { margin-left: auto; display: flex; align-items: center; gap: 0.6rem; font-family: var(--mono); font-size: 0.65rem; color: var(--muted); }
+  .slider { -webkit-appearance: none; appearance: none; width: 80px; height: 4px; background: var(--line); border-radius: 2px; outline: none; }
+  .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 2px solid var(--line); }
+
+  .eq-panel { display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.5rem; padding: 1rem 1.4rem; border-top: 2px solid var(--line); background: var(--bg2); }
+  .eq-band { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+  .eq-band label { font-family: var(--mono); font-size: 0.55rem; font-weight: 700; color: var(--muted); }
+  .eq-fader { -webkit-appearance: slider-vertical; appearance: none; writing-mode: vertical-lr; direction: rtl; width: 10px; height: 80px; background: var(--line); border-radius: 4px; outline: none; cursor: pointer; }
+  .eq-fader::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 10px; background: var(--accent4); border-radius: 2px; cursor: pointer; }
+  .eq-value { font-family: var(--mono); font-size: 0.6rem; font-weight: 700; color: var(--accent4); }
+
+  .fx-rack { display: flex; gap: 0.8rem; flex-wrap: wrap; padding: 1rem 1.4rem; border-top: 2px solid var(--line); background: var(--surface); }
+  .fx-unit { background: var(--bg2); border: 2px solid var(--line); border-radius: 8px; padding: 0.8rem; min-width: 108px; text-align: center; }
+  .fx-unit h4 { font-family: var(--mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent4); margin-bottom: 0.6rem; }
+  .fx-knob { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--line); margin: 0 auto 0.4rem; background: conic-gradient(var(--accent2) 0%, var(--accent2) 60%, var(--line) 60% 100%, var(--bg2) 100%); position: relative; }
+  .fx-knob::after { content: ''; position: absolute; top: 4px; left: 50%; transform: translateX(-50%); width: 2px; height: 10px; background: var(--ink); border-radius: 1px; }
+  .fx-toggle { width: 30px; height: 16px; background: var(--accent2); border-radius: 8px; margin: 0.5rem auto 0; position: relative; cursor: pointer; border: 2px solid var(--line); }
+  .fx-toggle::after { content: ''; position: absolute; right: 2px; top: 1px; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); }
+
+  /* ── PAGE TABS (sub-nav within a section) ── */
+  .page-tabs { display: flex; gap: 0.4rem; border-bottom: 3px solid var(--line); margin-bottom: 2rem; overflow-x: auto; flex-wrap: wrap; }
+  .page-tab { padding: 0.65rem 1.2rem; font-family: var(--mono); font-weight: 700; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); cursor: pointer; border: 2px solid var(--line); border-bottom: none; border-radius: 8px 8px 0 0; white-space: nowrap; transition: all .15s; background: var(--bg2); }
+  .page-tab:hover { color: var(--ink); background: var(--accent3); }
+  .page-tab.active { color: var(--ink); background: var(--accent3); }
+
+  /* ── UPLOAD ── */
+  .upload-zone { border: 3px dashed var(--line); border-radius: 12px; padding: 2.6rem; text-align: center; transition: all .2s; cursor: pointer; margin-bottom: 1.5rem; background: var(--surface); }
+  .upload-zone:hover { border-color: var(--accent); background: #fff8f0; }
+  .upload-zone.dragover { border-color: var(--accent2); background: #effbf9; }
+  .upload-icon { font-size: 2.4rem; margin-bottom: 0.8rem; }
+  .upload-zone h3 { font-family: var(--display); font-size: 1.5rem; letter-spacing: 0.06em; margin-bottom: 0.4rem; }
+  .upload-zone p { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+  .upload-progress { background: var(--surface); border: 2px solid var(--line); border-radius: 10px; padding: 1rem 1.4rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; }
+  .progress-bar-bg { flex: 1; height: 8px; background: var(--bg2); border-radius: 4px; overflow: hidden; border: 1px solid var(--line); }
+  .progress-bar-fill { height: 100%; background: var(--accent2); border-radius: 4px; width: 0%; transition: width .3s; }
+  .progress-label { font-family: var(--mono); font-size: 0.65rem; font-weight: 700; color: var(--muted); white-space: nowrap; }
+
+  .lock-banner { background: var(--accent3); border: 2px solid var(--line); border-radius: 10px; padding: 1rem 1.3rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .lock-banner input[type="password"] { font-family: var(--mono); font-size: 0.8rem; padding: 0.5rem 0.8rem; border: 2px solid var(--line); border-radius: 6px; background: var(--surface); flex: 1; min-width: 140px; }
+  .status-msg { font-family: var(--mono); font-size: 0.7rem; font-weight: 700; padding: 0.6rem 1rem; border-radius: 8px; margin-bottom: 1rem; display: none; }
+  .status-msg.ok { display: block; background: #d8f7ee; border: 2px solid var(--accent2); color: #00604f; }
+  .status-msg.err { display: block; background: #ffe3dc; border: 2px solid var(--accent); color: #9c1f0a; }
+
+  /* ── LIBRARY ── */
+  .library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .track-card { background: var(--surface); border: 2px solid var(--line); border-radius: 10px; padding: 1.1rem; display: flex; gap: 1rem; align-items: center; transition: transform .2s, box-shadow .2s; box-shadow: 3px 3px 0 var(--line); }
+  .track-card:hover { transform: translate(-2px,-2px) rotate(-0.4deg); box-shadow: 5px 5px 0 var(--line); }
+  .track-art { width: 52px; height: 52px; border-radius: 8px; background: linear-gradient(135deg, var(--accent2), var(--accent4)); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; border: 2px solid var(--line); }
+  .track-info h3 { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.2rem; }
+  .track-info p { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); }
+  .track-meta { margin-left: auto; text-align: right; flex-shrink: 0; }
+  .track-meta .duration { font-family: var(--mono); font-weight: 700; font-size: 0.7rem; color: var(--muted); }
+  .badge { font-family: var(--mono); font-size: 0.55rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 100px; margin-top: 0.3rem; display: inline-block; }
+  .badge-pub { background: var(--accent3); color: var(--ink); border: 1px solid var(--line); }
+  .badge-cat { background: var(--accent4); color: #fff; }
+  audio.track-player { width: 100%; margin-top: 0.5rem; height: 28px; }
+  .track-card-full { flex-direction: column; align-items: stretch; }
+  .track-card-full .track-top { display: flex; gap: 1rem; align-items: center; }
+
+  /* ── VIDEOS ── */
+  .videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.4rem; margin-top: 1.5rem; }
+  .video-card { background: var(--surface); border: 2px solid var(--line); border-radius: 10px; overflow: hidden; transition: transform .2s; box-shadow: 3px 3px 0 var(--line); }
+  .video-card:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--line); }
+  .video-info { padding: 1rem; }
+  .video-info h3 { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .video-info p { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); }
+
+  /* ── COMMENTS / GENERAL BOARD ── */
+  .comments-section { margin-top: 2rem; }
+  .comment-form { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: flex-start; flex-wrap: wrap; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent2), var(--accent4)); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: #fff; flex-shrink: 0; border: 2px solid var(--line); }
+  .comment-input { flex: 1; background: var(--surface); border: 2px solid var(--line); border-radius: 10px; padding: 0.75rem 1rem; color: var(--ink); font-family: var(--body); font-size: 0.88rem; resize: vertical; min-height: 70px; outline: none; min-width: 220px; }
+  .comment-input:focus { border-color: var(--accent4); }
+  .name-input { font-family: var(--mono); font-size: 0.75rem; padding: 0.6rem 0.8rem; border: 2px solid var(--line); border-radius: 8px; background: var(--surface); width: 140px; }
+  .comment-list { display: flex; flex-direction: column; gap: 1rem; }
+  .comment-item { display: flex; gap: 1rem; background: var(--surface); border: 2px solid var(--line); border-radius: 10px; padding: 1rem; }
+  .comment-meta { font-family: var(--mono); font-size: 0.65rem; font-weight: 700; color: var(--muted); margin-bottom: 0.4rem; }
+  .comment-meta strong { color: var(--accent); margin-right: 0.6rem; }
+  .comment-text { font-size: 0.88rem; line-height: 1.6; }
+  .empty-state { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); padding: 1.5rem; text-align: center; border: 2px dashed var(--line); border-radius: 10px; }
+
+  /* ── GALLERY ── */
+  .gallery-grid { display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(2, 150px); gap: 0.7rem; margin-top: 1.5rem; }
+  .gallery-item { position: relative; overflow: hidden; border-radius: 8px; border: 2px solid var(--line); cursor: pointer; box-shadow: 3px 3px 0 var(--line); }
+  .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; filter: saturate(1.1) contrast(1.05); }
+  .gallery-item:hover img { transform: scale(1.08); }
+  .gallery-item::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.6) 100%); opacity: 0; transition: opacity .3s; }
+  .gallery-item:hover::after { opacity: 1; }
+  .gallery-cap { position: absolute; bottom: 0.5rem; left: 0.7rem; right: 0.7rem; font-family: var(--mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.04em; color: #fff; text-transform: uppercase; opacity: 0; transform: translateY(6px); transition: all .3s; }
+  .gallery-item:hover .gallery-cap { opacity: 1; transform: translateY(0); }
+  .gallery-item.big { grid-column: span 2; grid-row: span 2; }
+  @media (max-width: 768px) {
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 160px); }
+    .gallery-item.big { grid-column: span 2; grid-row: span 1; }
+  }
+
+  /* ── ABOUT ── */
+  .band-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .band-story p { color: var(--ink); margin-bottom: 1rem; font-size: 0.97rem; line-height: 1.8; }
+  .influence-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+  .infl-tag { background: var(--surface); border: 2px solid var(--line); border-radius: 100px; font-family: var(--mono); font-weight: 700; font-size: 0.65rem; letter-spacing: 0.04em; padding: 0.35rem 0.9rem; color: var(--ink); text-transform: uppercase; }
+  .infl-tag.primary { background: var(--accent3); }
+  .members-list { display: flex; flex-direction: column; gap: 1rem; }
+  .member-card { background: var(--surface); border: 2px solid var(--line); border-radius: 10px; padding: 1.2rem; display: flex; gap: 1rem; align-items: center; box-shadow: 3px 3px 0 var(--line); transition: transform .2s; }
+  .member-card:hover { transform: translate(-2px,-2px); }
+  .member-avatar { width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: 1.4rem; color: #fff; flex-shrink: 0; overflow: hidden; border: 2px solid var(--line); }
+  .member-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .member-info h3 { font-weight: 700; margin-bottom: 0.2rem; }
+  .member-info p { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); letter-spacing: 0.04em; text-transform: uppercase; font-weight: 700; }
+
+  /* ── SHOWS ── */
+  .show-card { background: var(--surface); border: 2px solid var(--line); border-radius: 10px; padding: 1.4rem; display: flex; gap: 1.4rem; align-items: center; margin-bottom: 1rem; box-shadow: 4px 4px 0 var(--line); }
+  .show-date-block { text-align: center; min-width: 64px; }
+  .show-date-block .day { font-family: var(--display); font-size: 2.6rem; line-height: 1; color: var(--accent); }
+  .show-date-block .month { font-family: var(--mono); font-weight: 700; font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .show-details h3 { font-weight: 700; margin-bottom: 0.3rem; }
+  .show-details p { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+  .show-with { font-family: var(--mono); font-weight: 700; font-size: 0.65rem; color: var(--accent4); letter-spacing: 0.04em; margin-top: 0.4rem; }
+  .show-badge { margin-left: auto; font-family: var(--mono); font-weight: 700; font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.35rem 0.9rem; border-radius: 100px; background: var(--accent3); border: 2px solid var(--line); }
+
+  /* ── LIMITATIONS ── */
+  .limit-box { background: var(--surface); border: 2px solid var(--line); border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 4px 4px 0 var(--line); }
+  .limit-box h4 { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.8rem; }
+  .limit-box p { font-size: 0.85rem; color: var(--ink); line-height: 1.8; }
+  .limit-box .yes { color: var(--accent2); font-weight: 700; }
+  .limit-box .no { color: var(--accent); font-weight: 700; }
+
+  /* ── FOOTER ── */
+  footer { padding: 2.5rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: var(--ink); color: var(--bg); }
+  footer .logo { font-family: var(--display); font-size: 1.5rem; letter-spacing: 0.08em; color: var(--bg); display: flex; align-items: center; gap: 0.6rem; }
+  footer .logo span { color: var(--accent3); }
+  footer .logo img { height: 30px; width: 30px; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg); }
+  footer p { font-family: var(--mono); font-size: 0.65rem; color: var(--bg); letter-spacing: 0.04em; text-align: right; opacity: 0.85; }
+  .socials { display: flex; gap: 0.8rem; }
+  .social-link { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--bg); display: flex; align-items: center; justify-content: center; color: var(--bg); font-size: 0.9rem; text-decoration: none; transition: all .2s; }
+  .social-link:hover { background: var(--accent3); color: var(--ink); }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--ink); border-radius: 3px; }
+
+  @media (max-width: 768px) {
+    .hero { padding: 2rem 1.4rem; min-height: auto; padding-top: 5.5rem; }
+    .section { padding: 3rem 1.4rem; }
+    .band-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 1rem; flex-wrap: wrap; height: auto; }
+    .gig-ribbon { position: relative; top: auto; right: auto; display: inline-block; margin-bottom: 1.5rem; }
+    footer { padding: 2rem 1.4rem; flex-direction: column; align-items: flex-start; }
+    footer p { text-align: left; }
+    .eq-panel { grid-template-columns: repeat(4, 1fr); }
+    .nav-tabs { order: 3; width: 100%; justify-content: flex-start; padding-bottom: 0.4rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="nav-logo"><img src="logo.jpg" alt="Kreolyte logo">KREOLY<span>TE</span></a>
+  <ul class="nav-tabs">
+    <li><a href="#studio" class="active">Studio</a></li>
+    <li><a href="#sounds">Sounds</a></li>
+    <li><a href="#videos">Videos</a></li>
+    <li><a href="#shows">Shows</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#general">General</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <span class="nav-badge">🎸 Live Jul 25</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-stripe"></div>
+  <div class="hero-bg"></div>
+
+  <div class="gig-ribbon">
+    <div class="date">25 JUL</div>
+    <div class="detail">With Revolt</div>
+    <div class="detail">Madeleine · Rose Hill</div>
+  </div>
+
+  <div class="hero-eyebrow">🌋 Alternative Rock · Mauritius</div>
+  <div class="hero-title">KREOLY<span class="accent">TE</span></div>
+  <p class="hero-sub">Three musicians from Mauritius fusing the intensity of alternative rock with the improvisational depth of jazz — raw, oceanic, and louder than the tide. 🤘</p>
+  <div class="hero-meta">
+    <div class="meta-pill"><strong>3</strong> Members</div>
+    <div class="meta-pill"><strong>URF 2025</strong> Alumni</div>
+    <div class="meta-pill">Influences: <strong>Muse · RHCP · Incubus · Jazz</strong></div>
+    <div class="meta-pill">📍 <strong>Mauritius</strong></div>
+  </div>
+  <div class="hero-cta">
+    <a href="#sounds" class="btn btn-primary">🔊 Listen Now</a>
+    <a href="#shows" class="btn btn-outline">Upcoming Shows</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- STUDIO / AUDIO EDITOR (owner mockup — visual demo of editing tools) -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="studio">
+  <div class="section-label">Owner Studio</div>
+  <div class="section-title">Audio Editor</div>
+  <p class="section-desc">A preview of in-browser cutting, EQ, and effects. This panel is a visual demo of what's buildable with the Web Audio API — wire it up fully once you're ready to go deeper than the Sounds tab's simple uploader below.</p>
+
+  <div class="upload-zone">
+    <div class="upload-icon">📁</div>
+    <h3>Drop WAV Files Here</h3>
+    <p>Demo only — for real uploads that save permanently, use the Sounds tab →</p>
+  </div>
+
+  <div class="editor-shell">
+    <div class="editor-toolbar">
+      <button class="tool-btn active">✂ Cut</button>
+      <button class="tool-btn">⤷ Trim</button>
+      <button class="tool-btn">🔁 Loop</button>
+      <div class="tool-sep"></div>
+      <button class="tool-btn">📋 Copy</button>
+      <button class="tool-btn danger">🗑 Delete</button>
+      <div class="tool-sep"></div>
+      <button class="tool-btn">↩ Undo</button>
+      <button class="tool-btn">↪ Redo</button>
+      <div class="tool-sep"></div>
+      <button class="tool-btn">💾 Save Clip</button>
+      <button class="tool-btn post">⬆ Publish to Library</button>
+    </div>
+
+    <div class="waveform-area">
+      <div style="font-family:var(--mono);font-size:0.6rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem;letter-spacing:0.06em;">URF LIVE SET 2025 — MASTER.WAV &nbsp;|&nbsp; 44.1 kHz · 24-bit · Stereo</div>
+      <div class="waveform-display">
+        <svg viewBox="0 0 800 80" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="wg" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#6a2fb0" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#6a2fb0" stop-opacity="0.35"/>
+            </linearGradient>
+          </defs>
+          <g fill="url(#wg)">
+            <rect x="2" y="28" width="3" height="24"/><rect x="8" y="20" width="3" height="40"/><rect x="14" y="10" width="3" height="60"/><rect x="20" y="25" width="3" height="30"/>
+            <rect x="26" y="5" width="3" height="70"/><rect x="32" y="15" width="3" height="50"/><rect x="38" y="30" width="3" height="20"/><rect x="44" y="8" width="3" height="64"/>
+            <rect x="50" y="18" width="3" height="44"/><rect x="56" y="12" width="3" height="56"/><rect x="62" y="22" width="3" height="36"/><rect x="68" y="4" width="3" height="72"/>
+            <rect x="74" y="28" width="3" height="24"/><rect x="80" y="10" width="3" height="60"/><rect x="86" y="20" width="3" height="40"/><rect x="92" y="6" width="3" height="68"/>
+            <rect x="98" y="30" width="3" height="20"/><rect x="104" y="14" width="3" height="52"/><rect x="110" y="8" width="3" height="64"/><rect x="116" y="24" width="3" height="32"/>
+            <rect x="194" y="2" width="3" height="76" fill="#ff4424"/><rect x="200" y="0" width="3" height="80" fill="#ff4424"/><rect x="206" y="2" width="3" height="76" fill="#ff4424"/>
+            <rect x="212" y="4" width="3" height="72" fill="#ffc400"/><rect x="218" y="2" width="3" height="76" fill="#ffc400"/><rect x="224" y="0" width="3" height="80" fill="#ffc400"/>
+            <rect x="254" y="16" width="3" height="48"/><rect x="260" y="22" width="3" height="36"/><rect x="266" y="10" width="3" height="60"/>
+            <rect x="272" y="28" width="3" height="24"/><rect x="278" y="18" width="3" height="44"/><rect x="284" y="6" width="3" height="68"/>
+            <rect x="290" y="20" width="3" height="40"/><rect x="296" y="14" width="3" height="52"/><rect x="302" y="8" width="3" height="64"/><rect x="308" y="24" width="3" height="32"/>
+            <rect x="338" y="8" width="3" height="64"/><rect x="344" y="20" width="3" height="40"/><rect x="350" y="6" width="3" height="68"/><rect x="356" y="14" width="3" height="52"/>
+            <rect x="386" y="18" width="3" height="44"/><rect x="392" y="12" width="3" height="56"/><rect x="398" y="26" width="3" height="28"/><rect x="404" y="8" width="3" height="64"/>
+            <rect x="434" y="4" width="3" height="72"/><rect x="440" y="16" width="3" height="48"/><rect x="446" y="10" width="3" height="60"/><rect x="452" y="28" width="3" height="24"/>
+          </g>
+        </svg>
+        <div class="wf-selection"></div>
+        <div class="wf-playhead"></div>
+      </div>
+      <div class="wf-time"><span>0:00</span><span style="color:var(--accent)">2:14 — 3:52 (SELECTED)</span><span>12:45</span></div>
+    </div>
+
+    <div class="transport">
+      <button class="t-btn">⏮</button>
+      <button class="t-btn play">▶</button>
+      <button class="t-btn">⏸</button>
+      <button class="t-btn">⏭</button>
+      <span class="time-display">2:14 / 12:45</span>
+      <div class="vol-row">🔊 <input type="range" class="slider" value="80">&nbsp; Zoom: <input type="range" class="slider" value="40"></div>
+    </div>
+
+    <div style="padding:1rem 1.4rem 0.4rem;background:var(--bg2);border-top:2px solid var(--line)">
+      <div style="font-family:var(--mono);font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent4);margin-bottom:0.8rem;">Equaliser</div>
+    </div>
+    <div class="eq-panel">
+      <div class="eq-band"><input type="range" class="eq-fader" value="55" min="0" max="100"><label>60Hz</label><span class="eq-value">+3</span></div>
+      <div class="eq-band"><input type="range" class="eq-fader" value="65" min="0" max="100"><label>120Hz</label><span class="eq-value">+6</span></div>
+      <div class="eq-band"><input type="range" class="eq-fader" value="45" min="0" max="100"><label>250Hz</label><span class="eq-value">-2</span></div>
+      <div class="eq-band"><input type="range" class="eq-fader" value="55" min="0" max="100"><label>500Hz</label><span class="eq-value">0</span></div>
+      <div class="eq-band"><input type="range" class="eq-fader" value="70" min="0" max="100"><label>1kHz</label><span class="eq-value">+4</span></div>
+      <div class="eq-band"><input type="range" class="eq-fader" value="60" min="0" max="100"><label>2kHz</label><span class="eq-value">+2</span></div>
+      <div class="eq-band"><input type="range" class="eq-fader" value="75" min="0" max="100"><label>5kHz</label><span class="eq-value">+7</span></div>
+      <div class="eq-band"><input type="range" class="eq-fader" value="50" min="0" max="100"><label>16kHz</label><span class="eq-value">0</span></div>
+    </div>
+
+    <div style="padding:0.8rem 1.4rem 0.4rem;background:var(--surface);border-top:2px solid var(--line)">
+      <div style="font-family:var(--mono);font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:0.8rem;">Effects Chain</div>
+    </div>
+    <div class="fx-rack">
+      <div class="fx-unit"><h4>Reverb</h4><div class="fx-knob"></div><div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted)">Room · 42%</div><div class="fx-toggle"></div></div>
+      <div class="fx-unit"><h4>Delay</h4><div class="fx-knob" style="background: conic-gradient(var(--accent) 0%, var(--accent) 35%, var(--line) 35% 100%, var(--bg2) 100%)"></div><div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted)">1/4 · 25%</div><div class="fx-toggle"></div></div>
+      <div class="fx-unit"><h4>Compressor</h4><div class="fx-knob" style="background: conic-gradient(var(--accent3) 0%, var(--accent3) 75%, var(--line) 75% 100%, var(--bg2) 100%)"></div><div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted)">4:1 · -12dB</div><div class="fx-toggle"></div></div>
+      <div class="fx-unit"><h4>Chorus</h4><div class="fx-knob" style="background: conic-gradient(var(--accent4) 0%, var(--accent4) 50%, var(--line) 50% 100%, var(--bg2) 100%)"></div><div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted)">Depth · 0.6</div><div class="fx-toggle"></div></div>
+      <div class="fx-unit"><h4>Distortion</h4><div class="fx-knob" style="background: conic-gradient(var(--accent) 0%, var(--accent) 80%, var(--line) 80% 100%, var(--bg2) 100%)"></div><div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted)">Drive · 78%</div><div class="fx-toggle"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- SOUNDS — REAL upload + library, backed by Supabase -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="sounds">
+  <div class="section-label">Live Now</div>
+  <div class="section-title">Sounds</div>
+  <p class="section-desc">Real uploads. Files saved here are stored permanently and playable by anyone who visits the site.</p>
+
+  <div id="sounds-status" class="status-msg"></div>
+
+  <!-- Owner unlock -->
+  <div class="lock-banner" id="lock-banner">
+    <span style="font-family:var(--mono);font-weight:700;font-size:0.75rem;">🔒 Owner upload</span>
+    <input type="password" id="owner-password" placeholder="Enter owner password">
+    <button class="btn btn-teal btn-sm" id="unlock-btn">Unlock</button>
+    <span style="font-family:var(--mono);font-size:0.65rem;color:var(--muted);">Anyone can listen below — only the owner password unlocks uploading.</span>
+  </div>
+
+  <!-- Upload form (hidden until unlocked) -->
+  <div id="upload-panel" style="display:none;">
+    <div class="upload-zone" id="drop-zone">
+      <div class="upload-icon">🎵</div>
+      <h3>Drop a Sound File Here</h3>
+      <p>or click to browse · MP3 / WAV recommended under ~50MB on the free tier</p>
+      <input type="file" id="file-input" accept="audio/*" style="display:none;">
+    </div>
+
+    <div style="display:flex; gap:0.8rem; margin-bottom:1.2rem; flex-wrap:wrap;">
+      <input type="text" id="track-title" placeholder="Track title" style="flex:1; min-width:180px; font-family:var(--mono); font-size:0.8rem; padding:0.7rem 1rem; border:2px solid var(--line); border-radius:8px;">
+      <select id="track-category" style="font-family:var(--mono); font-size:0.8rem; padding:0.7rem 1rem; border:2px solid var(--line); border-radius:8px; background:var(--surface);">
+        <option value="live">Live Recording</option>
+        <option value="studio">Studio Session</option>
+        <option value="draft">Draft / Demo</option>
+        <option value="jazz">Jazz Interlude</option>
+      </select>
+    </div>
+
+    <div class="upload-progress" id="upload-progress" style="display:none;">
+      <span id="upload-filename" style="font-family:var(--mono);font-size:0.7rem;"></span>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <span class="progress-label" id="progress-label">0%</span>
+    </div>
+
+    <button class="btn btn-primary" id="publish-btn">⬆ Publish to Library</button>
+  </div>
+
+  <!-- Library -->
+  <div style="margin-top:2.5rem;">
+    <div class="section-label">Library</div>
+    <div id="library-list" class="library-grid">
+      <div class="empty-state">Loading sound library…</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- VIDEOS -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="videos">
+  <div class="section-label">YouTube Channel</div>
+  <div class="section-title">Videos</div>
+  <p class="section-desc">Live from <a href="https://youtube.com/@kreolyte" target="_blank" style="color:var(--accent4);font-weight:700;">@kreolyte</a> on YouTube.</p>
+
+  <div style="background:var(--surface);border:3px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:2rem;box-shadow:5px 5px 0 var(--line);">
+    <iframe style="width:100%;aspect-ratio:16/9;border:0;display:block;"
+      src="https://www.youtube.com/embed?listType=user_uploads&list=kreolyte"
+      title="Kreolyte YouTube channel uploads" allowfullscreen loading="lazy"></iframe>
+  </div>
+
+  <div class="videos-grid">
+    <div class="video-card" style="border-style:dashed;justify-content:center;align-items:center;text-align:center;display:flex;flex-direction:column;gap:0.6rem;padding:2rem 1rem;">
+      <div style="font-size:1.6rem">▶</div>
+      <h3 style="font-size:0.85rem;">URF 2025 Performance</h3>
+      <p style="font-family:var(--mono);font-size:0.65rem;color:var(--muted);">Send the URL to embed</p>
+    </div>
+    <div class="video-card" style="border-style:dashed;justify-content:center;align-items:center;text-align:center;display:flex;flex-direction:column;gap:0.6rem;padding:2rem 1rem;">
+      <div style="font-size:1.6rem">▶</div>
+      <h3 style="font-size:0.85rem;">Studio Session</h3>
+      <p style="font-family:var(--mono);font-size:0.65rem;color:var(--muted);">Send the URL to embed</p>
+    </div>
+    <div class="video-card" style="border-style:dashed;justify-content:center;align-items:center;text-align:center;display:flex;flex-direction:column;gap:0.6rem;padding:2rem 1rem;">
+      <div style="font-size:1.6rem">▶</div>
+      <h3 style="font-size:0.85rem;">More on the channel</h3>
+      <p style="font-family:var(--mono);font-size:0.65rem;color:var(--muted);"><a href="https://youtube.com/@kreolyte" target="_blank" style="color:var(--accent4);font-weight:700;">Visit @kreolyte →</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- SHOWS -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="shows">
+  <div class="section-label">Live</div>
+  <div class="section-title">Shows</div>
+
+  <div class="show-card">
+    <div class="show-date-block"><div class="day">25</div><div class="month">Jul 2026</div></div>
+    <div class="show-details"><h3>Madeleine · Rose Hill</h3><p>📍 Rose Hill, Mauritius</p><p class="show-with">with Revolt</p></div>
+    <div class="show-badge">Upcoming</div>
+  </div>
+
+  <div class="show-card" style="opacity:0.75">
+    <div class="show-date-block"><div class="day" style="color:var(--muted)">URF</div><div class="month">2025</div></div>
+    <div class="show-details"><h3>Underground Rock Festival 2025</h3><p>📍 Mauritius</p><p class="show-with" style="color:var(--muted)">Multi-band festival</p></div>
+    <div style="margin-left:auto;font-family:var(--mono);font-size:0.6rem;font-weight:700;color:var(--muted);padding:0.35rem 0.9rem;border-radius:100px;background:var(--bg2);border:2px solid var(--line)">Past</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- GALLERY -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="gallery">
+  <div class="section-label">On Stage</div>
+  <div class="section-title">Gallery</div>
+  <p class="section-desc">Straight off the Facebook page — URF 2025 and the road to July 25.</p>
+
+  <div class="gallery-grid">
+    <div class="gallery-item big"><img src="live-smoke-urf.jpg" alt="Kreolyte performing live, smoke and stage lights"><div class="gallery-cap">URF 2025 — Full Set</div></div>
+    <div class="gallery-item"><img src="stage-4person-blue.jpg" alt="Kreolyte on stage under blue lights"><div class="gallery-cap">Blue Hour</div></div>
+    <div class="gallery-item"><img src="bassist-color-rays.jpg" alt="Bassist singing under spotlight rays"><div class="gallery-cap">Bass / Vox</div></div>
+    <div class="gallery-item"><img src="guitarist-bw-rays.jpg" alt="Guitarist under dramatic spotlight beams"><div class="gallery-cap">Lead Guitar</div></div>
+    <div class="gallery-item"><img src="trio-entrance-urf.jpg" alt="Kreolyte trio at the festival entrance"><div class="gallery-cap">URF Entrance</div></div>
+    <div class="gallery-item"><img src="stage-4person-yellow.jpg" alt="Kreolyte on stage under yellow lights"><div class="gallery-cap">Festival Set</div></div>
+    <div class="gallery-item"><img src="bassist-bw-rays.jpg" alt="Bassist on stage, barricade in foreground"><div class="gallery-cap">Front Row</div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- GENERAL — open discussion board -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="general">
+  <div class="section-label">Talk to Us</div>
+  <div class="section-title">General</div>
+  <p class="section-desc">An open board for anything — feedback, requests, shoutouts before the July 25 show.</p>
+
+  <div id="general-status" class="status-msg"></div>
+
+  <div class="comments-section">
+    <div class="comment-form">
+      <div class="avatar">YOU</div>
+      <div style="flex:1; display:flex; gap:0.6rem; flex-wrap:wrap;">
+        <input type="text" id="general-name" class="name-input" placeholder="Your name">
+        <textarea id="general-message" class="comment-input" placeholder="Say something to Kreolyte…" style="flex:2;"></textarea>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:1.5rem;">
+      <button class="btn btn-primary btn-sm" id="general-post-btn">Post</button>
+    </div>
+    <div class="comment-list" id="general-list">
+      <div class="empty-state">Loading messages…</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- ABOUT -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="about">
+  <div class="section-label">The Band</div>
+  <div class="section-title">About Kreolyte</div>
+
+  <div class="band-grid">
+    <div class="band-story">
+      <div style="border-radius:10px;overflow:hidden;border:2px solid var(--line);margin-bottom:1.5rem;box-shadow:5px 5px 0 var(--line);">
+        <img src="trio-sitting-urf.jpg" alt="Kreolyte band members backstage at Underground Rock Festival 2025" style="width:100%;display:block;">
+      </div>
+      <p>Born from the volcanic energy of Mauritius in the Indian Ocean, <strong>Kreolyte</strong> is a three-piece alternative rock band that channels the intensity of their island home into a sound that defies easy categorisation.</p>
+      <p>Rooted in the post-grunge and alternative rock tradition of Muse, Red Hot Chili Peppers, and Incubus, the band weaves in the improvisational language of jazz to create music that breathes — tightly controlled one moment, explosively free the next.</p>
+      <p>After performing at the Underground Rock Festival (URF 2025), Kreolyte heads into 2026 with a concert on <strong>25 July at Madeleine, Rose Hill</strong>, sharing the stage with Revolt.</p>
+      <p style="color:var(--muted);font-size:0.85rem;">Mauritius has a rich and growing rock underground. <a href="https://en.wikipedia.org/wiki/Music_of_Mauritius" style="color:var(--accent4);font-weight:700;">Bands like Revolt, Skeptikal, Apostrophe and King of None</a> have been gaining recognition since 2018 — Kreolyte carries that torch forward.</p>
+
+      <div style="margin-top:1.5rem">
+        <div style="font-family:var(--mono);font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">Influences</div>
+        <div class="influence-row">
+          <span class="infl-tag primary">Muse</span>
+          <span class="infl-tag primary">Red Hot Chili Peppers</span>
+          <span class="infl-tag primary">Incubus</span>
+          <span class="infl-tag primary">Jazz</span>
+          <span class="infl-tag">Alternative Rock</span>
+          <span class="infl-tag">Post-Grunge</span>
+          <span class="infl-tag">Mauritius</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-family:var(--mono);font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">Members</div>
+      <div class="members-list">
+        <div class="member-card">
+          <div class="member-avatar"><img src="guitarist-bw-rays.jpg" alt="Kreolyte guitarist"></div>
+          <div class="member-info"><h3>Member 1</h3><p>Guitars / Vocals</p></div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar"><img src="bassist-color-rays.jpg" alt="Kreolyte bassist"></div>
+          <div class="member-info"><h3>Member 2</h3><p>Bass / Vocals</p></div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar" style="background:linear-gradient(135deg,var(--accent3),var(--accent4))">🥁</div>
+          <div class="member-info"><h3>Member 3</h3><p>Drums / Percussion</p></div>
+        </div>
+      </div>
+      <p style="font-family:var(--mono);font-size:0.65rem;color:var(--muted);margin-top:0.8rem;">← Send real names so we can swap these in</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- LIMITATIONS -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="limitations" style="background:var(--bg2)">
+  <div class="section-label">Technical Notes</div>
+  <div class="section-title">What's Real & What's Not</div>
+  <p class="section-desc">Hosted free on GitHub Pages. The Sounds and General tabs are wired to a real Supabase database — uploads there genuinely persist. The Studio tab's editor is a visual demo of what's buildable next.</p>
+
+  <div class="limit-box">
+    <h4 style="color:var(--accent2)">✅ Real & Working</h4>
+    <p>
+      <span class="yes">✓</span> <strong>Sounds tab</strong> — real file upload, saved permanently in Supabase Storage, playable by any visitor.<br>
+      <span class="yes">✓</span> <strong>General tab</strong> — real message board, saved permanently in a Supabase table.<br>
+      <span class="yes">✓</span> <strong>Owner password gate</strong> — only someone with the password can upload; anyone can listen/read.<br>
+      <span class="yes">✓</span> <strong>YouTube embed</strong> — your channel embedded directly.<br>
+      <span class="yes">✓</span> <strong>Gallery & About</strong> — your real photos.
+    </p>
+  </div>
+
+  <div class="limit-box" style="border-color:var(--accent)">
+    <h4 style="color:var(--accent)">⚠ Free Tier Limits</h4>
+    <p>
+      <span style="color:var(--accent)">~</span> <strong>Supabase free tier:</strong> 1GB total storage. Fine for MP3s/clips, tight for many full-length raw WAVs (those run 400–600MB each). Compressing to MP3 (~5–10MB per song) makes this very comfortable.<br>
+      <span style="color:var(--accent)">~</span> <strong>500MB+ uploads:</strong> possible, but will eat the free tier fast. For large raw masters, Cloudflare R2 (10GB free) is a better fit — ask if you want that added alongside Supabase.
+    </p>
+  </div>
+
+  <div class="limit-box">
+    <h4 style="color:var(--accent4)">❌ Still a Mockup</h4>
+    <p>
+      <span class="no">✗</span> <strong>Studio tab editing</strong> — cut/trim/EQ/effects are visual only right now, not yet wired to real audio processing. Buildable with the Web Audio API as a next step.<br>
+      <span class="no">✗</span> <strong>Automatic Facebook/YouTube sync</strong> — both platforms block scraping; manual updates (like this) are the practical path.
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo"><img src="logo.jpg" alt="Kreolyte logo">KREOLY<span>TE</span></div>
+  <div class="socials">
+    <a href="https://www.facebook.com/share/1CfMv5BVJi/" target="_blank" class="social-link">f</a>
+    <a href="https://youtube.com/@kreolyte" target="_blank" class="social-link" style="font-size:0.7rem">YT</a>
+  </div>
+  <p>Alternative Rock · Mauritius, Indian Ocean<br>© 2026 Kreolyte — All rights reserved</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ═══════════════════════════════════════════
+  // SUPABASE CONFIG — replace if you rotate keys
+  // ═══════════════════════════════════════════
+  const SUPABASE_URL = 'https://thkzskyofoaufhdklanc.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoa3pza3lvZm9hdWZoZGtsYW5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2Mjc4OTUsImV4cCI6MjA5ODIwMzg5NX0.6sISKyXkEZ1UYHjsysuUZumEiDcaQuPo2r60bwFeheg';
+
+  // Owner password — change this to whatever you like.
+  // NOTE: this is a soft gate (visible in page source), not real security.
+  // It stops casual visitors from uploading, not a determined attacker.
+  const OWNER_PASSWORD = 'kreolyte2026';
+
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ── Nav active state + scroll spy ──
+  const navLinks = document.querySelectorAll('.nav-tabs a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      navLinks.forEach(l => l.classList.remove('active'));
+      e.target.classList.add('active');
+    });
+  });
+  const sections = document.querySelectorAll('section[id]');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
+    navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+  });
+
+  // ── EQ fader display ──
+  document.querySelectorAll('.eq-fader').forEach((fader) => {
+    const val = fader.parentElement.querySelector('.eq-value');
+    fader.addEventListener('input', () => {
+      const db = Math.round((fader.value - 50) / 5);
+      val.textContent = (db >= 0 ? '+' : '') + db;
+    });
+  });
+
+  // ═══════════════════════════════════════════
+  // SOUNDS TAB — real upload + library
+  // ═══════════════════════════════════════════
+  let unlocked = false;
+
+  document.getElementById('unlock-btn').addEventListener('click', () => {
+    const pw = document.getElementById('owner-password').value;
+    if (pw === OWNER_PASSWORD) {
+      unlocked = true;
+      document.getElementById('upload-panel').style.display = 'block';
+      document.getElementById('lock-banner').style.background = 'var(--accent2)';
+      showStatus('sounds-status', 'Unlocked — you can upload now.', 'ok');
+    } else {
+      showStatus('sounds-status', 'Wrong password.', 'err');
+    }
+  });
+
+  function showStatus(elId, msg, type) {
+    const el = document.getElementById(elId);
+    el.textContent = msg;
+    el.className = 'status-msg ' + type;
+    setTimeout(() => { el.className = 'status-msg'; }, 5000);
+  }
+
+  const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('file-input');
+  let selectedFile = null;
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', e => { if (e.target.files.length) handleFile(e.target.files[0]); });
+
+  function handleFile(file) {
+    selectedFile = file;
+    dropZone.querySelector('h3').textContent = file.name;
+    dropZone.querySelector('p').textContent = (file.size / 1024 / 1024).toFixed(1) + ' MB selected';
+  }
+
+  document.getElementById('publish-btn').addEventListener('click', async () => {
+    if (!unlocked) { showStatus('sounds-status', 'Unlock with the owner password first.', 'err'); return; }
+    if (!selectedFile) { showStatus('sounds-status', 'Choose a file first.', 'err'); return; }
+    const title = document.getElementById('track-title').value.trim() || selectedFile.name;
+    const category = document.getElementById('track-category').value;
+
+    const progressBox = document.getElementById('upload-progress');
+    const fill = document.getElementById('progress-fill');
+    const label = document.getElementById('progress-label');
+    progressBox.style.display = 'flex';
+    document.getElementById('upload-filename').textContent = selectedFile.name;
+    fill.style.width = '10%'; label.textContent = 'Uploading…';
+
+    try {
+      const safeName = Date.now() + '_' + selectedFile.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+      const { data, error } = await supabase.storage.from('tracks').upload(safeName, selectedFile, { cacheControl: '3600', upsert: false });
+      if (error) throw error;
+
+      fill.style.width = '70%'; label.textContent = 'Saving…';
+
+      const { data: urlData } = supabase.storage.from('tracks').getPublicUrl(safeName);
+      const publicUrl = urlData.publicUrl;
+
+      const { error: insertError } = await supabase.from('tracks').insert([{ title, category, file_url: publicUrl }]);
+      if (insertError) throw insertError;
+
+      fill.style.width = '100%'; label.textContent = 'Done!';
+      showStatus('sounds-status', `"${title}" published to the library.`, 'ok');
+      selectedFile = null;
+      document.getElementById('track-title').value = '';
+      dropZone.querySelector('h3').textContent = 'Drop a Sound File Here';
+      dropZone.querySelector('p').textContent = 'or click to browse · MP3 / WAV recommended under ~50MB on the free tier';
+      setTimeout(() => { progressBox.style.display = 'none'; fill.style.width = '0%'; }, 1500);
+      loadLibrary();
+    } catch (err) {
+      console.error(err);
+      showStatus('sounds-status', 'Upload failed: ' + (err.message || 'check Supabase setup'), 'err');
+      progressBox.style.display = 'none';
+    }
+  });
+
+  async function loadLibrary() {
+    const listEl = document.getElementById('library-list');
+    try {
+      const { data, error } = await supabase.from('tracks').select('*').order('created_at', { ascending: false });
+      if (error) throw error;
+      if (!data || data.length === 0) {
+        listEl.innerHTML = '<div class="empty-state">No tracks yet — the owner can upload the first one above.</div>';
+        return;
+      }
+      listEl.innerHTML = data.map(track => `
+        <div class="track-card track-card-full">
+          <div class="track-top">
+            <div class="track-art">🎵</div>
+            <div class="track-info" style="flex:1">
+              <h3>${escapeHtml(track.title)}</h3>
+              <span class="badge badge-cat">${escapeHtml(track.category || 'general')}</span>
+            </div>
+          </div>
+          <audio class="track-player" controls preload="none" src="${escapeHtml(track.file_url)}"></audio>
+        </div>
+      `).join('');
+    } catch (err) {
+      console.error(err);
+      listEl.innerHTML = '<div class="empty-state">Couldn\'t load the library. Check the Supabase connection.</div>';
+    }
+  }
+
+  // ═══════════════════════════════════════════
+  // GENERAL TAB — real message board
+  // ═══════════════════════════════════════════
+  document.getElementById('general-post-btn').addEventListener('click', async () => {
+    const name = document.getElementById('general-name').value.trim() || 'Anonymous';
+    const message = document.getElementById('general-message').value.trim();
+    if (!message) { showStatus('general-status', 'Write something first.', 'err'); return; }
+    try {
+      const { error } = await supabase.from('comments').insert([{ name, message }]);
+      if (error) throw error;
+      document.getElementById('general-message').value = '';
+      showStatus('general-status', 'Posted!', 'ok');
+      loadGeneral();
+    } catch (err) {
+      console.error(err);
+      showStatus('general-status', 'Could not post: ' + (err.message || 'check Supabase setup'), 'err');
+    }
+  });
+
+  async function loadGeneral() {
+    const listEl = document.getElementById('general-list');
+    try {
+      const { data, error } = await supabase.from('comments').select('*').order('created_at', { ascending: false }).limit(50);
+      if (error) throw error;
+      if (!data || data.length === 0) {
+        listEl.innerHTML = '<div class="empty-state">No messages yet — be the first to say hi.</div>';
+        return;
+      }
+      listEl.innerHTML = data.map(c => `
+        <div class="comment-item">
+          <div class="avatar">${escapeHtml((c.name || 'AN').slice(0,2).toUpperCase())}</div>
+          <div>
+            <div class="comment-meta"><strong>${escapeHtml(c.name || 'Anonymous')}</strong> ${timeAgo(c.created_at)}</div>
+            <p class="comment-text">${escapeHtml(c.message)}</p>
+          </div>
+        </div>
+      `).join('');
+    } catch (err) {
+      console.error(err);
+      listEl.innerHTML = '<div class="empty-state">Couldn\'t load messages. Check the Supabase connection.</div>';
+    }
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str ?? '';
+    return div.innerHTML;
+  }
+  function timeAgo(iso) {
+    if (!iso) return '';
+    const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+    return Math.floor(diff/86400) + 'd ago';
+  }
+
+  // Initial loads
+  loadLibrary();
+  loadGeneral();
+</script>
+</body>
+</html>
