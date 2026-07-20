@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>KREOLYTE — Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#131009; --panel:#1d1812; --panel2:#241d14; --ink:#f1e7d3; --muted:#9d8f78;
+  --gold:#e0a83e; --green:#4aa96c; --red:#c94f3d; --line:#382e21; --line2:#4a3d2b;
+  --radius:14px;
+}
+*{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+html{color-scheme:dark;}
+body{
+  background:radial-gradient(1200px 600px at 50% -10%, #201a10 0%, var(--bg) 60%);
+  color:var(--ink); font-family:Inter,system-ui,sans-serif; font-size:15px; line-height:1.5;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom));
+  min-height:100vh;
+}
+header{padding:22px 18px 14px; text-align:center;}
+header h1{font-family:'Bebas Neue',sans-serif; font-size:44px; letter-spacing:6px; color:var(--gold); line-height:1; text-shadow:0 0 26px rgba(224,168,62,.28);}
+header .tag{font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--muted); text-transform:uppercase;}
+.stripe{height:3px; max-width:220px; margin:12px auto 0; border-radius:2px;
+  background:linear-gradient(90deg, var(--red), var(--gold));}
+main{max-width:760px; margin:0 auto; padding:8px 14px 30px; display:flex; flex-direction:column; gap:14px;}
+.tab{display:none; flex-direction:column; gap:14px;}
+.tab.active{display:flex;}
+.card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+  padding:18px 16px; box-shadow:0 8px 28px rgba(0,0,0,.45);}
+.card h2,.card h3{font-family:'Bebas Neue',sans-serif; letter-spacing:2.5px; color:var(--gold); font-weight:400;}
+.card h2{font-size:26px;} .card h3{font-size:21px;}
+.card h2::after,.card h3::after{content:""; display:block; width:64px; height:2px; margin-top:5px; border-radius:1px;
+  background:linear-gradient(90deg, var(--red), var(--gold));}
+.hint{color:var(--muted); font-size:12.5px; margin-top:6px;}
+.row{display:flex; flex-wrap:wrap; gap:9px; align-items:center; margin-top:12px;}
+.row.right{justify-content:flex-end;}
+.btn{font-family:Inter,sans-serif; font-weight:600; font-size:13.5px; color:var(--ink);
+  background:transparent; border:1px solid var(--line2); border-radius:10px; padding:10px 15px;
+  cursor:pointer; transition:border-color .15s, background .15s, transform .05s;}
+.btn:hover{border-color:var(--gold);}
+.btn:active{transform:translateY(1px);}
+.btn:disabled{opacity:.4; cursor:default;}
+.btn.primary{background:var(--gold); color:#191307; border-color:var(--gold);}
+.btn.primary:hover{background:#ecb856;}
+.btn.green{border-color:var(--green); color:#8fd8ac;}
+.btn.green:hover{background:rgba(74,169,108,.12);}
+.btn.danger{border-color:var(--red); color:#e88a7a;}
+.btn.danger:hover{background:rgba(201,79,61,.12);}
+.btn.big{font-size:16px; padding:14px 22px; border-radius:12px;}
+#btnRec{background:var(--red); border-color:var(--red); color:#fff;}
+#btnRec:hover{background:#d95f4c;}
+.mono{font-family:'Space Mono',monospace; font-size:13px; color:var(--muted);}
+.pill{display:inline-block; font-family:'Space Mono',monospace; font-size:11px; color:var(--ink);
+  background:var(--panel2); border:1px solid var(--line); border-radius:99px; padding:3px 11px;
+  margin-left:8px; vertical-align:middle; letter-spacing:.5px; max-width:220px; overflow:hidden;
+  text-overflow:ellipsis; white-space:nowrap;}
+.meter{height:14px; background:#0d0a06; border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-top:12px;}
+.meter>div{height:100%; width:0%;
+  background:linear-gradient(90deg, var(--green) 0 60%, var(--gold) 60% 85%, var(--red) 85% 100%);
+  transition:width .06s linear;}
+.progress{margin-top:12px; background:#0d0a06; border:1px solid var(--line); border-radius:9px;
+  height:22px; position:relative; overflow:hidden;}
+.progress .bar{height:100%; width:0%;
+  background:linear-gradient(90deg, var(--red), var(--gold));
+  transition:width .18s ease;}
+.progress .plabel{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:'Space Mono',monospace; font-size:11px; color:var(--ink); text-shadow:0 1px 2px rgba(0,0,0,.7);}
+canvas#wave{width:100%; height:150px; display:block; background:#0d0a06;
+  border:1px solid var(--line); border-radius:10px; margin-top:12px; touch-action:none; cursor:crosshair;}
+canvas#mvCanvas{width:100%; aspect-ratio:16/9; display:block; background:#000;
+  border:1px solid var(--line); border-radius:10px; margin-top:12px;}
+#mvThumbs{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;}
+#mvThumbs .th{position:relative; width:74px; height:52px; border:1px solid var(--line2);
+  border-radius:7px; overflow:hidden; background:#0d0a06;}
+#mvThumbs .th img{width:100%; height:100%; object-fit:cover; display:block;}
+#mvThumbs .th button{position:absolute; top:2px; right:2px; width:18px; height:18px; border:none;
+  border-radius:50%; background:rgba(0,0,0,.65); color:var(--ink); font-size:11px; line-height:1;
+  cursor:pointer; padding:0;}
+input[type=text],input[type=password],textarea,select{
+  background:var(--panel2); border:1px solid var(--line2); border-radius:9px; color:var(--ink);
+  font-family:Inter,sans-serif; font-size:14px; padding:9px 11px; outline:none; min-width:0;}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);}
+input.time{font-family:'Space Mono',monospace; width:74px; text-align:center;}
+label.fld{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted);}
+.eqrow{display:grid; grid-template-columns:44px 1fr 52px; align-items:center; gap:10px; margin-top:9px;}
+.eqrow .f{font-family:'Space Mono',monospace; font-size:11.5px; color:var(--muted); text-align:right;}
+.eqrow .v{font-family:'Space Mono',monospace; font-size:11.5px; color:var(--gold);}
+input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:4px; border-radius:2px;
+  background:var(--line2); outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:18px; height:18px;
+  border-radius:50%; background:var(--gold); border:2px solid #191307; cursor:pointer;}
+input[type=range]::-moz-range-thumb{width:16px; height:16px; border-radius:50%; background:var(--gold);
+  border:2px solid #191307; cursor:pointer;}
+.presets{display:flex; flex-wrap:wrap; gap:7px; margin-top:12px;}
+.presets .btn{padding:7px 12px; font-size:12.5px;}
+.track{background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:13px 13px 11px; margin-top:11px;}
+.track .tt{font-weight:600; font-size:14.5px; word-break:break-word;}
+.track .meta{font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); margin-top:2px;}
+.track audio{width:100%; margin-top:9px;}
+.track video{width:100%; margin-top:9px; border-radius:9px; background:#000;}
+.tools{display:none; border-top:1px dashed var(--line2); margin-top:11px; padding-top:4px;}
+.tools.open{display:block;}
+video#vLive,video#vEdit{width:100%; border-radius:10px; background:#000; margin-top:12px; max-height:46vh;}
+.overlay{position:fixed; inset:0; background:rgba(8,6,3,.72); display:flex; align-items:center;
+  justify-content:center; z-index:60; padding:20px;}
+.overlay[hidden]{display:none;}
+.mbox{background:var(--panel); border:1px solid var(--line2); border-radius:var(--radius);
+  padding:20px 18px; width:100%; max-width:400px; box-shadow:0 20px 60px rgba(0,0,0,.6);}
+.mbox h3{font-family:'Bebas Neue',sans-serif; letter-spacing:2px; color:var(--gold); font-size:21px; font-weight:400;}
+.mbox p{color:var(--muted); font-size:13.5px; margin-top:8px;}
+.mbox input{width:100%; margin-top:12px;}
+#toast{position:fixed; left:50%; bottom:calc(88px + env(safe-area-inset-bottom)); transform:translateX(-50%) translateY(20px);
+  background:var(--panel2); border:1px solid var(--green); color:var(--ink); font-size:13.5px;
+  padding:11px 16px; border-radius:11px; max-width:88vw; opacity:0; pointer-events:none;
+  transition:opacity .2s, transform .2s; z-index:70; box-shadow:0 10px 30px rgba(0,0,0,.5);}
+#toast.bad{border-color:var(--red);}
+#toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+nav#nav{position:fixed; left:0; right:0; bottom:0; z-index:50; display:flex;
+  background:#161109; border-top:1px solid var(--line);
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));}
+nav#nav button{flex:1; background:none; border:none; color:var(--muted); cursor:pointer;
+  font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:1.6px; padding:9px 2px 7px;
+  border-radius:9px; transition:color .15s;}
+nav#nav button .ic{display:block; font-size:17px; font-family:Inter,sans-serif; margin-bottom:1px;}
+nav#nav button.on{color:var(--gold);}
+.adminlink{display:block; margin:11px auto 0; background:none; border:1px solid var(--line2);
+  color:var(--muted); font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:2px;
+  text-transform:uppercase; padding:5px 14px; border-radius:99px; cursor:pointer;}
+.adminlink:hover{border-color:var(--gold); color:var(--gold);}
+body.admin .adminlink{border-color:var(--gold); color:var(--gold);}
+body:not(.admin) .admin-only{display:none !important;}
+#phGrid{display:grid; grid-template-columns:repeat(auto-fill, minmax(104px, 1fr)); gap:8px; margin-top:14px;}
+#phGrid .ph{position:relative; aspect-ratio:1; border:1px solid var(--line); border-radius:9px;
+  overflow:hidden; background:#0d0a06; cursor:pointer;}
+#phGrid .ph img{width:100%; height:100%; object-fit:cover; display:block;}
+#phGrid .ph button{position:absolute; top:4px; right:4px; width:28px; height:28px; border:1px solid var(--red);
+  border-radius:50%; background:rgba(0,0,0,.78); color:#e88a7a; font-size:16px; line-height:1;
+  cursor:pointer; padding:0;}
+#phGrid .hint{grid-column:1/-1;}
+#phBox img{max-width:92vw; max-height:80vh; border-radius:10px; border:1px solid var(--line2);
+  display:block; margin:0 auto;}
+.dl{display:inline-block; margin-top:10px; font-family:'Space Mono',monospace; font-size:12.5px;
+  color:#8fd8ac; text-decoration:underline; word-break:break-all;}
+.show-item{border-left:3px solid var(--gold); padding:8px 0 8px 13px; margin-top:12px;}
+.show-item .d{font-family:'Space Mono',monospace; color:var(--gold); font-size:12px;}
+.comment{border-bottom:1px dashed var(--line); padding:9px 0;}
+.comment .cn{font-weight:600; font-size:13px; color:var(--gold);}
+.comment .cm{font-size:13.5px; margin-top:2px;}
+.comment .cd{font-family:'Space Mono',monospace; font-size:10.5px; color:var(--muted); margin-top:2px;}
+textarea{width:100%; resize:vertical; min-height:64px;}
+.yt{position:relative; width:100%; aspect-ratio:16/9; margin-top:12px; border:1px solid var(--line);
+  border-radius:10px; overflow:hidden; background:#000;}
+.yt iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+</style>
+</head>
+<body>
+<header>
+  <h1>KREOLYTE</h1>
+  <div class="tag">Alternative Rock &bull; Mauritius</div>
+  <div class="stripe"></div>
+  <button id="btnAdmin" class="adminlink">band login</button>
+</header>
+
+<main>
+
+<!-- ============ RECORD ============ -->
+<section id="tab-rec" class="tab active">
+  <div class="card admin-only">
+    <h2>Studio recorder</h2>
+    <p class="hint">Audio takes record on this device first — nothing is uploaded until you choose to.</p>
+    <div class="meter"><div id="meterFill"></div></div>
+    <div class="row">
+      <button id="btnRec" class="btn big">&#9679; RECORD</button>
+      <button id="btnRecStop" class="btn big" disabled>&#9632; STOP</button>
+      <span id="recTime" class="mono">00:00</span>
+    </div>
+    <audio id="recPreview" controls hidden style="width:100%; margin-top:12px;"></audio>
+    <div class="row" id="recActions" hidden>
+      <button id="btnRecToEditor" class="btn primary">Send to editor</button>
+      <button id="btnRecUpload" class="btn green">Upload take</button>
+      <button id="btnRecDownload" class="btn">Download WAV</button>
+    </div>
+    <div class="progress" id="recProg" hidden><div class="bar"></div><span class="plabel"></span></div>
+    <a id="recDl" class="dl" hidden></a>
+  </div>
+</section>
+
+<!-- ============ EDITOR ============ -->
+<section id="tab-edit" class="tab">
+  <div class="card">
+    <h2>Editor<span id="edPill" class="pill">no track loaded</span></h2>
+    <p class="hint">Load a take from the recorder, or send any track here from the library. Drag on the waveform to select.</p>
+    <canvas id="wave"></canvas>
+    <div class="row">
+      <label class="fld">In <input id="selIn" class="time" type="text" placeholder="0:00"></label>
+      <label class="fld">Out <input id="selOut" class="time" type="text" placeholder="0:00"></label>
+      <span id="edDur" class="mono"></span>
+    </div>
+    <div class="row">
+      <button id="btnPlayEd" class="btn">&#9654; Play</button>
+      <button id="btnStopEd" class="btn">&#9632; Stop</button>
+      <button id="btnTrim" class="btn">Trim / keep selection</button>
+      <button id="btnSplice" class="btn">Remove / splice</button>
+      <button id="btnUndo" class="btn">&#8630; Undo</button>
+    </div>
+    <div class="row">
+      <button id="btnSaveSel" class="btn green">Save selection as new file</button>
+      <button id="btnPublish" class="btn primary">Publish edited track</button>
+    </div>
+    <div class="progress" id="edProg" hidden><div class="bar"></div><span class="plabel"></span></div>
+    <a id="edDl" class="dl" hidden></a>
+  </div>
+
+  <div class="card">
+    <h3>8-band EQ</h3>
+    <div class="presets" id="edPresets"></div>
+    <div id="edEQ"></div>
+  </div>
+
+  <div class="card" id="masterCard">
+    <h3>Mastering</h3>
+    <p class="hint">Renders a NEW file named <span class="mono">name_master_date.wav</span>. The original is never overwritten.</p>
+    <div class="row">
+      <label class="fld">Style
+        <select id="mPreset">
+          <option>Punchy Rock</option>
+          <option>Roots Reggae</option>
+          <option>Loud &amp; Bright</option>
+          <option>Clean Glue</option>
+        </select>
+      </label>
+    </div>
+    <div class="eqrow"><span class="f">Loud</span><input type="range" id="mLoud" min="1" max="10" value="5"><span class="v" id="mLoudV">5</span></div>
+    <div class="eqrow"><span class="f">Tone</span><input type="range" id="mTone" min="-5" max="5" value="0"><span class="v" id="mToneV">0</span></div>
+    <p class="hint">Tone: left = warmer lows, right = brighter highs. Loud: more compression + level.</p>
+    <div class="row">
+      <button id="btnMaster" class="btn primary">Render master</button>
+    </div>
+    <div class="progress" id="mProg" hidden><div class="bar"></div><span class="plabel"></span></div>
+    <a id="mDl" class="dl" hidden></a>
+  </div>
+</section>
+
+<!-- ============ LIBRARY ============ -->
+<section id="tab-lib" class="tab">
+  <div class="card">
+    <h2>Track library</h2>
+    <p class="hint">Latest takes, mixes and masters from the studio.</p>
+    <p class="hint admin-only">Admin: every track has EQ, quick-master playback, editing, mastering, video-making and delete.</p>
+    <div class="row">
+      <button id="btnLibRefresh" class="btn">&#8635; Refresh</button>
+      <button id="btnAFilePick" class="btn green admin-only">Upload an audio file</button>
+      <input id="aFile" type="file" accept="audio/*" hidden>
+    </div>
+    <div class="progress" id="aUpProg" hidden><div class="bar"></div><span class="plabel"></span></div>
+    <div id="libList"><p class="hint" style="margin-top:14px;">Loading&hellip;</p></div>
+  </div>
+</section>
+
+<!-- ============ VIDEO ============ -->
+<section id="tab-video" class="tab">
+  <div class="card admin-only">
+    <h2>Session camera</h2>
+    <p class="hint">Record video of the session, trim it, then save it to the video library.</p>
+    <video id="vLive" muted playsinline hidden></video>
+    <div class="row">
+      <button id="btnVRec" class="btn big danger">&#9679; RECORD VIDEO</button>
+      <button id="btnVStop" class="btn big" disabled>&#9632; STOP</button>
+      <span id="vRecTime" class="mono">00:00</span>
+    </div>
+  </div>
+
+  <div class="card admin-only" id="vEditCard" hidden>
+    <h3>Video editor<span id="vPill" class="pill"></span></h3>
+    <video id="vEdit" controls playsinline></video>
+    <div class="row">
+      <label class="fld">In <input id="vIn" class="time" type="text" value="0:00"></label>
+      <button id="btnVSetIn" class="btn">Set in here</button>
+      <label class="fld">Out <input id="vOut" class="time" type="text" value="0:00"></label>
+      <button id="btnVSetOut" class="btn">Set out here</button>
+    </div>
+    <div class="row">
+      <button id="btnVPreview" class="btn">&#9654; Preview selection</button>
+      <button id="btnVExport" class="btn green">Export trimmed clip</button>
+    </div>
+    <p class="hint">Export plays the selection once in real time while it records the trimmed clip.</p>
+    <div class="progress" id="vProg" hidden><div class="bar"></div><span class="plabel"></span></div>
+    <div class="row">
+      <button id="btnVUploadFull" class="btn primary">Upload this video</button>
+      <button id="btnVUploadTrim" class="btn primary" hidden>Upload trimmed clip</button>
+      <button id="btnVYouTube" class="btn danger">Post to YouTube</button>
+      <button id="btnVDownload" class="btn">Download</button>
+    </div>
+    <a id="vDl" class="dl" hidden></a>
+  </div>
+
+  <div class="card">
+    <h3>On YouTube</h3>
+    <div class="yt"><iframe src="https://www.youtube-nocookie.com/embed/SvkUPKWDr70" title="Kreolyte on YouTube" loading="lazy" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
+    <div class="yt"><iframe src="https://www.youtube-nocookie.com/embed/rgCBD-3C7Co" title="Kreolyte on YouTube" loading="lazy" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
+    <p class="hint">More on the channel: <a class="dl" href="https://www.youtube.com/@kreolyte" target="_blank" rel="noopener">youtube.com/@kreolyte</a></p>
+  </div>
+
+  <div class="card">
+    <h3>Session video library</h3>
+    <div class="row">
+      <button id="btnVidRefresh" class="btn">&#8635; Refresh</button>
+      <button id="btnVFilePick" class="btn green admin-only">Upload a video file</button>
+      <input id="vFile" type="file" accept="video/*" hidden>
+    </div>
+    <div class="progress" id="vUpProg" hidden><div class="bar"></div><span class="plabel"></span></div>
+    <div id="vidList"><p class="hint" style="margin-top:14px;">Loading&hellip;</p></div>
+  </div>
+</section>
+
+<!-- ============ MUSIC VIDEO ============ -->
+<section id="tab-mv" class="tab">
+  <div class="card">
+    <h2>Music video maker<span id="mvPill" class="pill">no track loaded</span></h2>
+    <p class="hint">Pick a track, choose a scene, add your line and photos &mdash; the engine renders a cinematic clip cut to the music. Everything runs on this device.</p>
+    <div class="row">
+      <select id="mvTrackSel" style="flex:1;"><option value="">Choose a track&hellip;</option></select>
+      <button id="btnMvLoad" class="btn">Load</button>
+    </div>
+    <div class="row">
+      <button id="btnMvUseEditor" class="btn">Use the track in the editor</button>
+    </div>
+    <div class="progress" id="mvLoadProg" hidden><div class="bar"></div><span class="plabel"></span></div>
+  </div>
+
+  <div class="card">
+    <h3>Scene &amp; words</h3>
+    <div class="row">
+      <label class="fld">Scene
+        <select id="mvScene">
+          <option value="0">Ember drift</option>
+          <option value="1">Light rays</option>
+          <option value="2">Storm nebula</option>
+        </select>
+      </label>
+      <label class="fld">Grade
+        <select id="mvGrade">
+          <option value="0">Amber noir</option>
+          <option value="1">Teal &amp; rust</option>
+          <option value="2">Silver film</option>
+          <option value="3">Toon ink (cartoon)</option>
+        </select>
+      </label>
+    </div>
+    <div class="row"><input id="mvLine" type="text" placeholder="Movie line &mdash; the big title card" style="flex:1;" maxlength="90"></div>
+    <div class="row"><input id="mvContext" type="text" placeholder="Context line &mdash; appears mid-video (optional)" style="flex:1;" maxlength="90"></div>
+    <div class="row"><input id="mvCredit" type="text" value="KREOLYTE" style="flex:1;" maxlength="40"></div>
+    <p class="hint">The movie line opens the video, the context line lands in the middle, the credit closes it.</p>
+  </div>
+
+  <div class="card">
+    <h3>Photos &mdash; 2.5D layer</h3>
+    <p class="hint">Optional. Photos get slow camera pushes and pans, cut on the beat. With no photos the scene runs pure cinema.</p>
+    <div class="row">
+      <button id="btnMvPics" class="btn green">Add photos</button>
+      <button id="btnMvClearPics" class="btn">Clear all</button>
+      <span id="mvPicCount" class="mono">0 photos</span>
+    </div>
+    <input id="mvPics" type="file" accept="image/*" multiple hidden>
+    <div id="mvThumbs"></div>
+  </div>
+
+  <div class="card">
+    <h3>Preview &amp; render</h3>
+    <canvas id="mvCanvas"></canvas>
+    <div class="row">
+      <button id="btnMvPreview" class="btn">&#9654; Preview</button>
+      <button id="btnMvStopPrev" class="btn">&#9632; Stop</button>
+      <button id="btnMvRender" class="btn primary">Render video</button>
+    </div>
+    <p class="hint">Render plays the whole track once in real time while it records (a 3-minute song takes 3 minutes). Keep this tab in the foreground. Works best in Chrome.</p>
+    <div class="progress" id="mvProg" hidden><div class="bar"></div><span class="plabel"></span></div>
+    <div class="row">
+      <button id="btnMvUpload" class="btn green" hidden>Upload to video library</button>
+      <button id="btnMvYouTube" class="btn danger" hidden>Post to YouTube</button>
+    </div>
+    <a id="mvDl" class="dl" hidden></a>
+  </div>
+</section>
+
+<!-- ============ PHOTOS ============ -->
+<section id="tab-photos" class="tab">
+  <div class="card">
+    <h2>Photos</h2>
+    <p class="hint">Moments from the studio and the stage.</p>
+    <div class="row">
+      <button id="btnPhRefresh" class="btn">&#8635; Refresh</button>
+      <button id="btnPhPick" class="btn green admin-only">Upload photos</button>
+    </div>
+    <input id="phFile" type="file" accept="image/*" multiple hidden>
+    <div class="progress" id="phProg" hidden><div class="bar"></div><span class="plabel"></span></div>
+    <div id="phGrid"><p class="hint">Loading&hellip;</p></div>
+  </div>
+</section>
+
+<!-- ============ INFO ============ -->
+<section id="tab-info" class="tab">
+  <div class="card">
+    <h2>Shows</h2>
+    <div class="show-item">
+      <div class="d">25 JUL 2026</div>
+      <div><strong>Madeleine, Rose Hill</strong> &mdash; with Revolt</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Message board</h3>
+    <div id="comments"></div>
+    <div class="row"><input id="cName" type="text" placeholder="Your name" style="flex:1;"></div>
+    <div class="row"><textarea id="cMsg" placeholder="Leave a message for the band"></textarea></div>
+    <div class="row right"><button id="btnComment" class="btn primary">Post message</button></div>
+  </div>
+  <div class="card">
+    <h3>The band</h3>
+    <p style="margin-top:10px;"><strong style="color:var(--gold);">Stephane</strong> &mdash; guitar &amp; vocals</p>
+    <p><strong style="color:var(--gold);">Giovani</strong> &mdash; bass</p>
+    <p><strong style="color:var(--gold);">Didier</strong> &mdash; drums</p>
+    <p class="hint">Alternative rock with jazz in its veins, from Mauritius. Muse &times; RHCP &times; Incubus energy, island grit.</p>
+  </div>
+</section>
+
+</main>
+
+<nav id="nav">
+  <button data-tab="rec" class="on admin-only"><span class="ic">&#9210;</span>Rec</button>
+  <button data-tab="edit" class="admin-only"><span class="ic">&#9986;</span>Edit</button>
+  <button data-tab="lib"><span class="ic">&#9835;</span>Music</button>
+  <button data-tab="video"><span class="ic">&#127909;</span>Video</button>
+  <button data-tab="mv" class="admin-only"><span class="ic">&#127916;</span>MV</button>
+  <button data-tab="photos"><span class="ic">&#128247;</span>Photos</button>
+  <button data-tab="info"><span class="ic">&#9776;</span>Info</button>
+</nav>
+
+<div id="modal" class="overlay" hidden>
+  <div class="mbox">
+    <h3 id="mTitle"></h3>
+    <p id="mBodyTxt"></p>
+    <input id="mInput" type="text" hidden>
+    <div class="row right">
+      <button id="mCancel" class="btn">Cancel</button>
+      <button id="mOk" class="btn primary">OK</button>
+    </div>
+  </div>
+</div>
+
+<div id="phBox" class="overlay" hidden>
+  <div style="text-align:center;">
+    <img id="phBig" alt="">
+    <div id="phCap" class="mono" style="margin-top:10px;"></div>
+    <button id="phDelete" class="btn danger admin-only" style="margin-top:12px;">Delete this photo</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script>
+/* ================= CORE ================= */
+const WORKER = 'https://kreolyte-worker.brothergios.workers.dev';
+const proxyUrl = id => WORKER + '/api/file/' + encodeURIComponent(id);
+const $ = s => document.querySelector(s);
+const AC = window.AudioContext || window.webkitAudioContext;
+let actx = null;
+function getCtx(){ if(!actx) actx = new AC(); if(actx.state === 'suspended') actx.resume(); return actx; }
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let sitePass = null;
+
+function fmtT(s){
+  if(!isFinite(s) || s < 0) s = 0;
+  const m = Math.floor(s/60), ss = Math.floor(s%60);
+  return m + ':' + String(ss).padStart(2,'0');
+}
+function parseT(str){
+  if(!str) return NaN;
+  const p = String(str).trim().split(':');
+  if(p.length === 1) return parseFloat(p[0]);
+  return (parseInt(p[0],10)||0)*60 + (parseFloat(p[1])||0);
+}
+function stripExt(n){ return String(n||'track').replace(/\.[^.]+$/,''); }
+function dateStr(){ return new Date().toISOString().slice(0,10); }
+
+let toastT;
+function toast(msg, bad){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.toggle('bad', !!bad);
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 4200);
+}
+
+function prog(el, frac, label){
+  el.hidden = false;
+  el.querySelector('.bar').style.width = Math.round(frac*100) + '%';
+  el.querySelector('.plabel').textContent = label || (Math.round(frac*100) + '%');
+}
+function progHide(el){ el.hidden = true; el.querySelector('.bar').style.width = '0%'; }
+
+function setDl(a, blob, filename){
+  if(a._url) URL.revokeObjectURL(a._url);
+  a._url = URL.createObjectURL(blob);
+  a.href = a._url; a.download = filename;
+  a.textContent = 'Download ' + filename;
+  a.hidden = false;
+}
+
+/* ---------- modal ---------- */
+let modalResolve = null;
+function showModal(opts){
+  return new Promise(res => {
+    modalResolve = res;
+    $('#mTitle').textContent = opts.title || '';
+    $('#mBodyTxt').textContent = opts.body || '';
+    const inp = $('#mInput');
+    inp.hidden = !opts.input;
+    inp.type = opts.type || 'text';
+    inp.value = opts.value || '';
+    $('#mOk').textContent = opts.okText || 'OK';
+    $('#modal').hidden = false;
+    if(opts.input) setTimeout(() => { inp.focus(); inp.select(); }, 50);
+  });
+}
+function closeModal(val){
+  $('#modal').hidden = true;
+  if(modalResolve){ const r = modalResolve; modalResolve = null; r(val); }
+}
+$('#mOk').onclick = () => closeModal($('#mInput').hidden ? true : $('#mInput').value);
+$('#mCancel').onclick = () => closeModal(null);
+$('#mInput').addEventListener('keydown', e => { if(e.key === 'Enter') $('#mOk').click(); });
+async function confirmM(title, body, okText){ return !!(await showModal({title, body, okText})); }
+async function promptM(title, body, value){
+  const v = await showModal({title, body, input:true, value});
+  if(v === null) return null;
+  const t = String(v).trim();
+  return t || null;
+}
+async function getPassword(){
+  if(sitePass) return sitePass;
+  const v = await showModal({title:'Password required', body:'Enter the site password to continue.', input:true, type:'password', okText:'Unlock'});
+  if(!v) throw new Error('Cancelled — password needed for this action.');
+  sitePass = v;
+  return v;
+}
+
+/* ---------- API ---------- */
+async function fetchTracks(){
+  const r = await fetch(WORKER + '/api/tracks');
+  if(!r.ok) throw new Error('Could not reach the track API (' + r.status + ')');
+  const j = await r.json();
+  if(Array.isArray(j)) return j;
+  if(j && Array.isArray(j.results)) return j.results;
+  if(j && Array.isArray(j.tracks)) return j.tracks;
+  return [];
+}
+const CHUNK_SIZE = 8 * 1024 * 1024; /* files above this use chunked multipart upload */
+function singleUpload(blob, filename, title, category, dur, pass, onProg){
+  return new Promise((res, rej) => {
+    const fd = new FormData();
+    fd.append('file', blob, filename);
+    fd.append('title', title);
+    fd.append('category', category || 'general');
+    if(dur) fd.append('duration', dur);
+    const x = new XMLHttpRequest();
+    x.open('POST', WORKER + '/api/upload');
+    x.setRequestHeader('X-Site-Password', pass);
+    x.upload.onprogress = e => { if(e.lengthComputable && onProg) onProg(e.loaded / e.total); };
+    x.onload = () => {
+      if(x.status >= 200 && x.status < 300) res();
+      else if(x.status === 401){ sitePass = null; rej(new Error('Wrong password — upload refused.')); }
+      else rej(new Error('Upload failed (' + x.status + '). The file is still on this device — retry or download it.'));
+    };
+    x.onerror = () => rej(new Error('Network error during upload. The file is still on this device — retry or download it.'));
+    x.send(fd);
+  });
+}
+function uploadPart(id, uploadId, partNum, chunk, pass, onPartProg){
+  return new Promise((res, rej) => {
+    const x = new XMLHttpRequest();
+    x.open('POST', WORKER + '/api/upload/part?id=' + encodeURIComponent(id)
+      + '&uploadId=' + encodeURIComponent(uploadId) + '&part=' + partNum);
+    x.setRequestHeader('X-Site-Password', pass);
+    x.upload.onprogress = e => { if(e.lengthComputable && onPartProg) onPartProg(e.loaded); };
+    x.onload = () => {
+      if(x.status >= 200 && x.status < 300){
+        try{ res(JSON.parse(x.responseText).etag); }
+        catch(e){ rej(new Error('Bad response for part ' + partNum)); }
+      }
+      else if(x.status === 401){ sitePass = null; rej(new Error('Wrong password — upload refused.')); }
+      else rej(new Error('Part ' + partNum + ' failed (' + x.status + ')'));
+    };
+    x.onerror = () => rej(new Error('Network error on part ' + partNum));
+    x.send(chunk);
+  });
+}
+async function chunkedUpload(blob, filename, title, category, dur, pass, onProg){
+  const startR = await fetch(WORKER + '/api/upload/start', {
+    method:'POST',
+    headers:{'Content-Type':'application/json', 'X-Site-Password': pass},
+    body: JSON.stringify({filename, contentType: blob.type || 'application/octet-stream'})
+  });
+  if(startR.status === 401){ sitePass = null; throw new Error('Wrong password — upload refused.'); }
+  if(startR.status === 404) throw new Error('The Worker does not have chunked upload yet — deploy the updated worker (src/index.js), then retry.');
+  if(!startR.ok) throw new Error('Could not start the upload (' + startR.status + ').');
+  const {id, uploadId} = await startR.json();
+  const total = blob.size, parts = [];
+  let sent = 0, partNum = 1;
+  for(let off = 0; off < total; off += CHUNK_SIZE, partNum++){
+    const chunk = blob.slice(off, Math.min(off + CHUNK_SIZE, total));
+    let etag = null, lastErr = null;
+    for(let attempt = 0; attempt < 3 && etag === null; attempt++){
+      try{
+        etag = await uploadPart(id, uploadId, partNum, chunk, pass,
+          loaded => { if(onProg) onProg(Math.min(1, (sent + loaded) / total)); });
+      }catch(e){ lastErr = e; if(String(e.message).indexOf('password') !== -1) throw e; await sleep(900); }
+    }
+    if(etag === null) throw new Error((lastErr && lastErr.message) + ' after 3 tries. The file is still on this device — retry or download it.');
+    parts.push({partNumber: partNum, etag});
+    sent += chunk.size;
+    if(onProg) onProg(sent / total);
+  }
+  const compR = await fetch(WORKER + '/api/upload/complete', {
+    method:'POST',
+    headers:{'Content-Type':'application/json', 'X-Site-Password': pass},
+    body: JSON.stringify({id, uploadId, parts, title, category: category || 'general', duration: dur || ''})
+  });
+  if(!compR.ok) throw new Error('Upload sent but could not be finalized (' + compR.status + ') — retry.');
+}
+async function xhrUpload(blob, filename, title, category, dur, onProg){
+  const pass = await getPassword();
+  if(blob.size <= CHUNK_SIZE) return singleUpload(blob, filename, title, category, dur, pass, onProg);
+  return chunkedUpload(blob, filename, title, category, dur, pass, onProg);
+}
+async function verifyUploaded(title, filename){
+  for(let i = 0; i < 5; i++){
+    await sleep(1300);
+    try{
+      const list = await fetchTracks();
+      if(list.some(t => t.title === title || (t.id && filename && t.id.indexOf(filename) !== -1))) return true;
+    }catch(e){ /* keep polling */ }
+  }
+  return false;
+}
+async function uploadAndVerify(blob, filename, title, category, dur, progEl, phaseFrom){
+  const p0 = phaseFrom || 0;
+  await xhrUpload(blob, filename, title, category, dur,
+    f => prog(progEl, p0 + f*(0.9 - p0), 'Uploading ' + Math.round(f*100) + '%'));
+  prog(progEl, 0.93, 'Verifying on server\u2026');
+  const ok = await verifyUploaded(title, filename);
+  progHide(progEl);
+  if(ok) toast('"' + title + '" saved & verified \u2714');
+  else toast('Upload finished but the track was not confirmed in the library. Refresh the library — if it is missing, retry.', true);
+  return ok;
+}
+
+/* ---------- audio buffer helpers ---------- */
+function makeBuffer(ch, len, rate){ return getCtx().createBuffer(ch, Math.max(1,len), rate); }
+function sliceBuffer(buf, a, b){
+  const rate = buf.sampleRate;
+  const s = Math.max(0, Math.floor(a*rate)), e = Math.min(buf.length, Math.floor(b*rate));
+  const out = makeBuffer(buf.numberOfChannels, e - s, rate);
+  for(let c = 0; c < buf.numberOfChannels; c++)
+    out.getChannelData(c).set(buf.getChannelData(c).subarray(s, e));
+  return out;
+}
+function concatBuffers(b1, b2){
+  const rate = b1.sampleRate, ch = Math.max(b1.numberOfChannels, b2.numberOfChannels);
+  const out = makeBuffer(ch, b1.length + b2.length, rate);
+  for(let c = 0; c < ch; c++){
+    const d = out.getChannelData(c);
+    d.set(b1.getChannelData(Math.min(c, b1.numberOfChannels-1)), 0);
+    d.set(b2.getChannelData(Math.min(c, b2.numberOfChannels-1)), b1.length);
+  }
+  return out;
+}
+function bufferToWav(buf){
+  const nCh = buf.numberOfChannels, rate = buf.sampleRate;
+  const bytes = buf.length * nCh * 2 + 44;
+  const ab = new ArrayBuffer(bytes), v = new DataView(ab);
+  let p = 0;
+  const wS = s => { for(let i = 0; i < s.length; i++) v.setUint8(p++, s.charCodeAt(i)); };
+  const w32 = n => { v.setUint32(p, n, true); p += 4; };
+  const w16 = n => { v.setUint16(p, n, true); p += 2; };
+  wS('RIFF'); w32(bytes - 8); wS('WAVE');
+  wS('fmt '); w32(16); w16(1); w16(nCh); w32(rate); w32(rate*nCh*2); w16(nCh*2); w16(16);
+  wS('data'); w32(buf.length * nCh * 2);
+  const chans = [];
+  for(let c = 0; c < nCh; c++) chans.push(buf.getChannelData(c));
+  for(let i = 0; i < buf.length; i++)
+    for(let c = 0; c < nCh; c++){
+      let s = Math.max(-1, Math.min(1, chans[c][i]));
+      v.setInt16(p, s < 0 ? s * 0x8000 : s * 0x7FFF, true); p += 2;
+    }
+  return new Blob([ab], {type:'audio/wav'});
+}
+/* Offline render with real progress via scheduled suspends. chainFn(octx, src) -> last node. */
+async function renderOffline(buffer, chainFn, onProg){
+  const octx = new OfflineAudioContext(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
+  const src = octx.createBufferSource();
+  src.buffer = buffer;
+  const last = chainFn(octx, src);
+  last.connect(octx.destination);
+  src.start(0);
+  const dur = buffer.duration;
+  if(onProg && octx.suspend && dur > 2){
+    const steps = 40;
+    for(let i = 1; i < steps; i++){
+      const t = dur * i / steps;
+      try{
+        octx.suspend(t).then(() => { onProg(i/steps); octx.resume(); }).catch(()=>{});
+      }catch(e){ break; }
+    }
+  }
+  const out = await octx.startRendering();
+  if(onProg) onProg(1);
+  return out;
+}
+
+/* ---------- navigation ---------- */
+function switchTab(id){
+  if(ADMIN_TABS.indexOf(id) !== -1 && !isAdmin()){
+    adminLogin().then(ok => { if(ok) switchTab(id); });
+    return;
+  }
+  document.querySelectorAll('.tab').forEach(s => s.classList.toggle('active', s.id === 'tab-' + id));
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === id));
+  if(id === 'lib') loadLibrary();
+  if(id === 'video') loadVideos();
+  if(id === 'mv') mvTabOpen();
+  if(id === 'photos') loadPhotos();
+  if(id === 'info') loadComments();
+  if(id === 'edit') requestAnimationFrame(drawWave);
+  window.scrollTo({top:0});
+}
+document.querySelectorAll('#nav button').forEach(b => b.onclick = () => switchTab(b.dataset.tab));
+
+/* ---------- admin / public mode ---------- */
+const ADMIN_TABS = ['rec', 'edit', 'mv'];
+function isAdmin(){ return document.body.classList.contains('admin'); }
+/* Verifies the password server-side: a DELETE on an id that cannot exist.
+   The Worker checks the password before anything else, so 401 = wrong,
+   anything else = correct. Nothing real is ever deleted. */
+async function verifyPass(pass){
+  const r = await fetch(WORKER + '/api/tracks/' + encodeURIComponent('auth-check-' + Date.now()), {
+    method:'DELETE', headers:{'X-Site-Password': pass}
+  });
+  return r.status !== 401;
+}
+function setAdmin(on){
+  document.body.classList.toggle('admin', on);
+  $('#btnAdmin').textContent = on ? 'log out' : 'band login';
+  if(on){ try{ sessionStorage.setItem('kreo_admin', sitePass || ''); }catch(e){} }
+  else{
+    try{ sessionStorage.removeItem('kreo_admin'); }catch(e){}
+    sitePass = null;
+    const cur = document.querySelector('.tab.active');
+    if(cur && ADMIN_TABS.indexOf(cur.id.slice(4)) !== -1) switchTab('lib');
+  }
+}
+async function adminLogin(){
+  const v = await showModal({title:'Band login', body:'Enter the site password to unlock recording, editing, uploads and deletes.', input:true, type:'password', okText:'Unlock'});
+  if(!v) return false;
+  try{
+    const ok = await verifyPass(v);
+    if(!ok){ toast('Wrong password.', true); return false; }
+    sitePass = v;
+    setAdmin(true);
+    toast('Welcome back \u2014 full studio unlocked.');
+    return true;
+  }catch(e){ toast('Could not verify the password: ' + e.message, true); return false; }
+}
+$('#btnAdmin').onclick = () => {
+  if(isAdmin()){ setAdmin(false); toast('Logged out \u2014 this is what the public sees.'); }
+  else adminLogin();
+};
+
+/* ================= EQ (shared defs) ================= */
+const EQ_FREQS = [60, 120, 250, 500, 1000, 2000, 4000, 8000];
+const EQ_LABELS = ['60', '120', '250', '500', '1k', '2k', '4k', '8k'];
+const sliderToDb = v => (v - 50) / 5;
+const dbToGain = db => Math.pow(10, db / 20);
+const EQ_PRESETS = {
+  Flat:   [50,50,50,50,50,50,50,50],
+  Bass:   [70,65,55,50,45,45,50,55],
+  Drums:  [65,55,48,45,55,60,55,62],
+  Guitar: [45,50,55,60,60,65,60,50],
+  Vocal:  [40,45,50,55,65,65,60,55]
+};
+/* Builds 8 slider rows into container; onChange(i, db). Returns {set(vals), get()} */
+function buildEQUI(container, onChange){
+  const sliders = [];
+  EQ_FREQS.forEach((f, i) => {
+    const row = document.createElement('div'); row.className = 'eqrow';
+    const lab = document.createElement('span'); lab.className = 'f'; lab.textContent = EQ_LABELS[i];
+    const r = document.createElement('input'); r.type = 'range'; r.min = 0; r.max = 100; r.value = 50;
+    const val = document.createElement('span'); val.className = 'v'; val.textContent = '0.0dB';
+    r.addEventListener('input', () => {
+      const db = sliderToDb(+r.value);
+      val.textContent = db.toFixed(1) + 'dB';
+      onChange(i, db);
+    });
+    row.appendChild(lab); row.appendChild(r); row.appendChild(val);
+    container.appendChild(row);
+    sliders.push({r, val});
+  });
+  return {
+    set(vals){
+      vals.forEach((v, i) => {
+        sliders[i].r.value = v;
+        const db = sliderToDb(v);
+        sliders[i].val.textContent = db.toFixed(1) + 'dB';
+        onChange(i, db);
+      });
+    },
+    get(){ return sliders.map(s => sliderToDb(+s.r.value)); }
+  };
+}
+function buildPresetButtons(container, apply){
+  Object.keys(EQ_PRESETS).forEach(name => {
+    const b = document.createElement('button');
+    b.className = 'btn'; b.textContent = name;
+    b.onclick = () => apply(EQ_PRESETS[name]);
+    container.appendChild(b);
+  });
+}
+</script>
+<script>
+/* ================= RECORDER (audio) ================= */
+let recStream = null, mediaRec = null, recChunks = [], recBlob = null;
+let recTimer = null, recStart = 0, meterRAF = 0;
+
+function stopMeter(){ cancelAnimationFrame(meterRAF); $('#meterFill').style.width = '0%'; }
+
+async function startRecording(){
+  if(recBlob){
+    const ok = await confirmM('Start a new take?',
+      'Recording again will discard the previous take on this device. Download or upload it first if you want to keep it.',
+      'Discard & record');
+    if(!ok) return;
+  }
+  try{
+    recStream = await navigator.mediaDevices.getUserMedia({audio:true});
+  }catch(e){ toast('Microphone access refused: ' + e.message, true); return; }
+  recBlob = null; recChunks = [];
+  $('#recPreview').hidden = true; $('#recActions').hidden = true; $('#recDl').hidden = true;
+
+  const ctx = getCtx();
+  const src = ctx.createMediaStreamSource(recStream);
+  const an = ctx.createAnalyser(); an.fftSize = 512;
+  src.connect(an);
+  const data = new Uint8Array(an.fftSize);
+  (function meter(){
+    an.getByteTimeDomainData(data);
+    let sum = 0;
+    for(let i = 0; i < data.length; i++){ const d = (data[i]-128)/128; sum += d*d; }
+    const rms = Math.sqrt(sum/data.length);
+    $('#meterFill').style.width = Math.min(100, rms*300) + '%';
+    meterRAF = requestAnimationFrame(meter);
+  })();
+
+  const mime = ['audio/webm;codecs=opus','audio/webm','audio/ogg','audio/mp4']
+    .find(m => window.MediaRecorder && MediaRecorder.isTypeSupported(m)) || '';
+  mediaRec = new MediaRecorder(recStream, mime ? {mimeType:mime} : undefined);
+  mediaRec.ondataavailable = e => { if(e.data.size) recChunks.push(e.data); };
+  mediaRec.onstop = () => {
+    recBlob = new Blob(recChunks, {type: mediaRec.mimeType || 'audio/webm'});
+    recStream.getTracks().forEach(t => t.stop());
+    stopMeter(); clearInterval(recTimer);
+    const pv = $('#recPreview');
+    if(pv._url) URL.revokeObjectURL(pv._url);
+    pv._url = URL.createObjectURL(recBlob);
+    pv.src = pv._url; pv.hidden = false;
+    $('#recActions').hidden = false;
+    $('#btnRec').disabled = false; $('#btnRecStop').disabled = true;
+    toast('Take captured — it stays on this device until you upload it.');
+  };
+  mediaRec.start(250);
+  recStart = Date.now();
+  $('#recTime').textContent = '00:00';
+  clearInterval(recTimer);
+  recTimer = setInterval(() => {
+    const s = Math.floor((Date.now() - recStart)/1000);
+    $('#recTime').textContent = String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+  }, 500);
+  $('#btnRec').disabled = true; $('#btnRecStop').disabled = false;
+}
+$('#btnRec').onclick = startRecording;
+$('#btnRecStop').onclick = () => { if(mediaRec && mediaRec.state !== 'inactive') mediaRec.stop(); };
+
+async function recToBuffer(){
+  const ab = await recBlob.arrayBuffer();
+  return getCtx().decodeAudioData(ab);
+}
+$('#btnRecToEditor').onclick = async () => {
+  if(!recBlob) return;
+  try{
+    const buf = await recToBuffer();
+    setEditorBuffer(buf, 'take_' + dateStr());
+    switchTab('edit');
+    toast('Take loaded in the editor.');
+  }catch(e){ toast('Could not decode the take: ' + e.message, true); }
+};
+$('#btnRecDownload').onclick = async () => {
+  if(!recBlob) return;
+  try{
+    const buf = await recToBuffer();
+    const wav = bufferToWav(buf);
+    setDl($('#recDl'), wav, 'take_' + dateStr() + '.wav');
+    $('#recDl').click();
+  }catch(e){ toast('Could not convert to WAV: ' + e.message, true); }
+};
+$('#btnRecUpload').onclick = async () => {
+  if(!recBlob) return;
+  const name = await promptM('Upload take', 'Name for this take:', 'take_' + dateStr());
+  if(!name) return;
+  try{
+    prog($('#recProg'), 0.02, 'Converting to WAV\u2026');
+    const buf = await recToBuffer();
+    const wav = bufferToWav(buf);
+    setDl($('#recDl'), wav, name + '.wav'); /* local safety copy always available */
+    await uploadAndVerify(wav, name + '.wav', name, 'general', fmtT(buf.duration), $('#recProg'), 0.05);
+  }catch(e){ progHide($('#recProg')); toast(e.message, true); }
+};
+
+/* ================= EDITOR ================= */
+let edBuffer = null, edName = 'track', edUndo = [], edSel = null;
+let edEQdB = new Array(8).fill(0);
+let edLiveFilters = null, edSrcNode = null;
+
+const wave = $('#wave');
+function drawWave(){
+  const dpr = window.devicePixelRatio || 1;
+  const w = wave.clientWidth, h = wave.clientHeight;
+  if(!w) return;
+  wave.width = w * dpr; wave.height = h * dpr;
+  const g = wave.getContext('2d');
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.clearRect(0, 0, w, h);
+  if(!edBuffer){
+    g.fillStyle = '#5a4c38'; g.font = '12px "Space Mono", monospace';
+    g.textAlign = 'center';
+    g.fillText('no audio loaded — record a take or send one from the library', w/2, h/2);
+    return;
+  }
+  const d = edBuffer.getChannelData(0);
+  const step = Math.max(1, Math.floor(d.length / w));
+  g.strokeStyle = '#e0a83e'; g.lineWidth = 1;
+  g.beginPath();
+  for(let x = 0; x < w; x++){
+    let min = 1, max = -1;
+    const s0 = x * step, s1 = Math.min(d.length, s0 + step);
+    for(let i = s0; i < s1; i++){ const v = d[i]; if(v < min) min = v; if(v > max) max = v; }
+    const y1 = (1 - max) * h / 2, y2 = (1 - min) * h / 2;
+    g.moveTo(x + .5, y1); g.lineTo(x + .5, Math.max(y2, y1 + 1));
+  }
+  g.stroke();
+  if(edSel && edSel.b > edSel.a){
+    const x1 = edSel.a / edBuffer.duration * w, x2 = edSel.b / edBuffer.duration * w;
+    g.fillStyle = 'rgba(74,169,108,.22)';
+    g.fillRect(x1, 0, x2 - x1, h);
+    g.strokeStyle = '#4aa96c'; g.lineWidth = 1.5;
+    g.beginPath(); g.moveTo(x1, 0); g.lineTo(x1, h); g.moveTo(x2, 0); g.lineTo(x2, h); g.stroke();
+  }
+}
+window.addEventListener('resize', drawWave);
+
+function setEditorBuffer(buf, name, keepUndo){
+  edBuffer = buf; edName = name || edName;
+  if(!keepUndo) edUndo = [];
+  edSel = null;
+  $('#edPill').textContent = edName;
+  $('#edDur').textContent = 'length ' + fmtT(buf.duration);
+  $('#selIn').value = ''; $('#selOut').value = '';
+  stopEdPlayback();
+  drawWave();
+}
+function syncSelInputs(){
+  if(edSel){ $('#selIn').value = fmtT(edSel.a); $('#selOut').value = fmtT(edSel.b); }
+}
+/* drag select */
+let dragging = false;
+function evTime(e){
+  const r = wave.getBoundingClientRect();
+  const x = Math.min(Math.max(e.clientX - r.left, 0), r.width);
+  return edBuffer ? x / r.width * edBuffer.duration : 0;
+}
+wave.addEventListener('pointerdown', e => {
+  if(!edBuffer) return;
+  dragging = true;
+  wave.setPointerCapture(e.pointerId);
+  edSel = {a: evTime(e), b: evTime(e)};
+  drawWave();
+});
+wave.addEventListener('pointermove', e => {
+  if(!dragging || !edBuffer) return;
+  edSel.b = evTime(e);
+  drawWave();
+});
+wave.addEventListener('pointerup', e => {
+  if(!dragging) return;
+  dragging = false;
+  if(edSel && edSel.b < edSel.a){ const t = edSel.a; edSel.a = edSel.b; edSel.b = t; }
+  if(edSel && edSel.b - edSel.a < 0.02) edSel = null;
+  syncSelInputs(); drawWave();
+});
+function inputSel(){
+  if(!edBuffer) return;
+  const a = parseT($('#selIn').value), b = parseT($('#selOut').value);
+  if(isFinite(a) && isFinite(b) && b > a){
+    edSel = {a: Math.max(0, a), b: Math.min(edBuffer.duration, b)};
+    drawWave();
+  }
+}
+$('#selIn').addEventListener('change', inputSel);
+$('#selOut').addEventListener('change', inputSel);
+
+/* editor playback with live EQ */
+function stopEdPlayback(){
+  if(edSrcNode){ try{ edSrcNode.stop(); }catch(e){} edSrcNode = null; }
+  edLiveFilters = null;
+}
+$('#btnStopEd').onclick = stopEdPlayback;
+$('#btnPlayEd').onclick = () => {
+  if(!edBuffer){ toast('Nothing loaded yet.', true); return; }
+  stopEdPlayback();
+  const ctx = getCtx();
+  edSrcNode = ctx.createBufferSource();
+  edSrcNode.buffer = edBuffer;
+  edLiveFilters = EQ_FREQS.map((f, i) => {
+    const b = ctx.createBiquadFilter();
+    b.type = 'peaking'; b.frequency.value = f; b.Q.value = 1; b.gain.value = edEQdB[i];
+    return b;
+  });
+  let node = edSrcNode;
+  edLiveFilters.forEach(f => { node.connect(f); node = f; });
+  node.connect(ctx.destination);
+  if(edSel && edSel.b > edSel.a) edSrcNode.start(0, edSel.a, edSel.b - edSel.a);
+  else edSrcNode.start(0);
+  edSrcNode.onended = () => { edSrcNode = null; edLiveFilters = null; };
+};
+
+/* editor EQ UI */
+const edEQUI = buildEQUI($('#edEQ'), (i, db) => {
+  edEQdB[i] = db;
+  if(edLiveFilters) edLiveFilters[i].gain.value = db;
+});
+buildPresetButtons($('#edPresets'), vals => edEQUI.set(vals));
+
+/* destructive edits with undo */
+function pushUndo(){ edUndo.push(edBuffer); if(edUndo.length > 12) edUndo.shift(); }
+$('#btnUndo').onclick = () => {
+  if(!edUndo.length){ toast('Nothing to undo.'); return; }
+  edBuffer = edUndo.pop();
+  setEditorBuffer(edBuffer, edName, true);
+  toast('Undone.');
+};
+$('#btnTrim').onclick = () => {
+  if(!edBuffer || !edSel || edSel.b - edSel.a < 0.02){ toast('Drag a selection first.', true); return; }
+  pushUndo();
+  setEditorBuffer(sliceBuffer(edBuffer, edSel.a, edSel.b), edName, true);
+  toast('Kept the selection only.');
+};
+$('#btnSplice').onclick = () => {
+  if(!edBuffer || !edSel || edSel.b - edSel.a < 0.02){ toast('Drag a selection first.', true); return; }
+  pushUndo();
+  const left = sliceBuffer(edBuffer, 0, edSel.a);
+  const right = sliceBuffer(edBuffer, edSel.b, edBuffer.duration);
+  setEditorBuffer(concatBuffers(left, right), edName, true);
+  toast('Selection removed & spliced.');
+};
+
+/* EQ render chain (uses current editor EQ) */
+function eqChain(octx, src){
+  let node = src;
+  EQ_FREQS.forEach((f, i) => {
+    const b = octx.createBiquadFilter();
+    b.type = 'peaking'; b.frequency.value = f; b.Q.value = 1; b.gain.value = edEQdB[i];
+    node.connect(b); node = b;
+  });
+  return node;
+}
+
+/* save selection as a new file */
+$('#btnSaveSel').onclick = async () => {
+  if(!edBuffer || !edSel || edSel.b - edSel.a < 0.05){ toast('Drag a selection first.', true); return; }
+  const name = await promptM('Save selection', 'Name for the new file (selection ' + fmtT(edSel.a) + ' \u2192 ' + fmtT(edSel.b) + ', current EQ applied):', stripExt(edName) + '_cut');
+  if(!name) return;
+  const progEl = $('#edProg');
+  try{
+    stopEdPlayback();
+    const piece = sliceBuffer(edBuffer, edSel.a, edSel.b);
+    prog(progEl, 0.02, 'Rendering\u2026');
+    const rendered = await renderOffline(piece, eqChain, f => prog(progEl, f*0.45, 'Rendering ' + Math.round(f*100) + '%'));
+    const wav = bufferToWav(rendered);
+    setDl($('#edDl'), wav, name + '.wav');
+    await uploadAndVerify(wav, name + '.wav', name, 'general', fmtT(rendered.duration), progEl, 0.5);
+  }catch(e){ progHide(progEl); toast(e.message, true); }
+};
+
+/* publish whole edited track */
+$('#btnPublish').onclick = async () => {
+  if(!edBuffer){ toast('Nothing loaded yet.', true); return; }
+  const name = await promptM('Publish edited track', 'Name for the new track (full track, current EQ applied). The original is untouched:', stripExt(edName) + '_edit');
+  if(!name) return;
+  const progEl = $('#edProg');
+  try{
+    stopEdPlayback();
+    prog(progEl, 0.02, 'Rendering\u2026');
+    const rendered = await renderOffline(edBuffer, eqChain, f => prog(progEl, f*0.45, 'Rendering ' + Math.round(f*100) + '%'));
+    const wav = bufferToWav(rendered);
+    setDl($('#edDl'), wav, name + '.wav');
+    await uploadAndVerify(wav, name + '.wav', name, 'general', fmtT(rendered.duration), progEl, 0.5);
+  }catch(e){ progHide(progEl); toast(e.message, true); }
+};
+
+/* ================= MASTERING ================= */
+$('#mLoud').addEventListener('input', () => $('#mLoudV').textContent = $('#mLoud').value);
+$('#mTone').addEventListener('input', () => $('#mToneV').textContent = $('#mTone').value);
+
+const M_PRESETS = {
+  'Punchy Rock':  {low: 2.5, high: 1.5, pres: 2.0, thr: -16, ratio: 4},
+  'Roots Reggae': {low: 4.0, high: -1.0, pres: 0.0, thr: -14, ratio: 3},
+  'Loud & Bright':{low: 1.0, high: 3.0, pres: 1.5, thr: -18, ratio: 5},
+  'Clean Glue':   {low: 0.5, high: 0.5, pres: 0.0, thr: -10, ratio: 2}
+};
+function masterChain(octx, src){
+  const p = M_PRESETS[$('#mPreset').value] || M_PRESETS['Clean Glue'];
+  const loud = +$('#mLoud').value;   /* 1..10 */
+  const tone = +$('#mTone').value;   /* -5..+5 */
+  const ls = octx.createBiquadFilter();
+  ls.type = 'lowshelf'; ls.frequency.value = 120;
+  ls.gain.value = p.low - tone * 0.5;
+  const hs = octx.createBiquadFilter();
+  hs.type = 'highshelf'; hs.frequency.value = 7500;
+  hs.gain.value = p.high + tone * 0.8;
+  const pk = octx.createBiquadFilter();
+  pk.type = 'peaking'; pk.frequency.value = 3000; pk.Q.value = 1;
+  pk.gain.value = p.pres;
+  const comp = octx.createDynamicsCompressor();
+  comp.threshold.value = p.thr - loud;
+  comp.ratio.value = p.ratio;
+  comp.knee.value = 6; comp.attack.value = 0.01; comp.release.value = 0.25;
+  const makeup = octx.createGain();
+  makeup.gain.value = dbToGain(2 + loud * 0.5);
+  const limiter = octx.createDynamicsCompressor();
+  limiter.threshold.value = -1.5; limiter.ratio.value = 20;
+  limiter.knee.value = 0; limiter.attack.value = 0.002; limiter.release.value = 0.1;
+  src.connect(ls); ls.connect(hs); hs.connect(pk); pk.connect(comp);
+  comp.connect(makeup); makeup.connect(limiter);
+  return limiter;
+}
+$('#btnMaster').onclick = async () => {
+  if(!edBuffer){ toast('Load a track into the editor first (Send to editor from the library).', true); return; }
+  const base = stripExt(edName) + '_master_' + dateStr();
+  const name = await promptM('Render master', 'The mastered file will be saved as a new track named:', base);
+  if(!name) return;
+  const progEl = $('#mProg');
+  try{
+    stopEdPlayback();
+    prog(progEl, 0.01, 'Mastering\u2026');
+    const rendered = await renderOffline(edBuffer, masterChain, f => prog(progEl, f*0.5, 'Mastering ' + Math.round(f*100) + '%'));
+    const wav = bufferToWav(rendered);
+    setDl($('#mDl'), wav, name + '.wav');
+    await uploadAndVerify(wav, name + '.wav', name, 'general', fmtT(rendered.duration), progEl, 0.55);
+  }catch(e){ progHide(progEl); toast(e.message, true); }
+};
+</script>
+<script>
+/* ================= LIBRARY (audio) ================= */
+async function loadLibraryToEditor(t, focusMaster){
+  toast('Loading "' + t.title + '"\u2026');
+  try{
+    let res = await fetch(proxyUrl(t.id));
+    if(!res.ok && t.file_url) res = await fetch(t.file_url); /* fallback if proxy missing */
+    if(!res.ok) throw new Error('audio fetch failed (' + res.status + ')');
+    const ab = await res.arrayBuffer();
+    const buf = await getCtx().decodeAudioData(ab);
+    setEditorBuffer(buf, t.title);
+    switchTab('edit');
+    if(focusMaster) $('#masterCard').scrollIntoView({behavior:'smooth'});
+    toast('"' + t.title + '" loaded in the editor.');
+  }catch(e){
+    toast('Could not load the audio: ' + e.message + '. Check that the Worker /api/file proxy is deployed (CORS).', true);
+  }
+}
+async function deleteTrack(t, card, refresh){
+  const ok = await confirmM('Delete "' + t.title + '"?',
+    'This removes the file from storage and the database permanently. It cannot be undone.', 'Delete forever');
+  if(!ok) return;
+  try{
+    const pass = await getPassword();
+    const r = await fetch(WORKER + '/api/tracks/' + encodeURIComponent(t.id), {
+      method:'DELETE', headers:{'X-Site-Password': pass}
+    });
+    if(r.status === 401){ sitePass = null; throw new Error('Wrong password — nothing was deleted.'); }
+    if(!r.ok) throw new Error('Delete failed (' + r.status + ') — the track is still there.');
+    card.remove();
+    toast('"' + t.title + '" deleted \u2714');
+    if(refresh) refresh();
+  }catch(e){ toast(e.message, true); }
+}
+function trackCard(t){
+  const card = document.createElement('div'); card.className = 'track';
+  const tt = document.createElement('div'); tt.className = 'tt'; tt.textContent = t.title;
+  const meta = document.createElement('div'); meta.className = 'meta';
+  meta.textContent = (t.duration ? t.duration + ' \u00b7 ' : '') + (t.created_at || '');
+  const audio = document.createElement('audio');
+  audio.controls = true; audio.preload = 'none';
+  audio.crossOrigin = 'anonymous';
+  audio.src = proxyUrl(t.id);
+  audio.addEventListener('error', () => {
+    if(!audio._fellBack && t.file_url){
+      audio._fellBack = true;
+      audio.removeAttribute('crossorigin');
+      audio.src = t.file_url; /* playback works; EQ tools need the /api/file proxy */
+    }
+  });
+  const row = document.createElement('div'); row.className = 'row';
+  const bTools = document.createElement('button'); bTools.className = 'btn admin-only'; bTools.textContent = '\uD83C\uDF9B Tools';
+  const bEdit = document.createElement('button'); bEdit.className = 'btn admin-only'; bEdit.textContent = 'Send to editor';
+  const bMaster = document.createElement('button'); bMaster.className = 'btn green admin-only'; bMaster.textContent = 'Master';
+  const bMV = document.createElement('button'); bMV.className = 'btn admin-only'; bMV.textContent = '\uD83C\uDFAC Make video';
+  const bDel = document.createElement('button'); bDel.className = 'btn danger admin-only'; bDel.textContent = 'Delete';
+  row.appendChild(bTools); row.appendChild(bEdit); row.appendChild(bMaster); row.appendChild(bMV); row.appendChild(bDel);
+  const tools = document.createElement('div'); tools.className = 'tools';
+
+  let graph = null;
+  function ensureGraph(){
+    if(graph) return graph;
+    const ctx = getCtx();
+    const src = ctx.createMediaElementSource(audio);
+    const filters = EQ_FREQS.map(f => {
+      const b = ctx.createBiquadFilter();
+      b.type = 'peaking'; b.frequency.value = f; b.Q.value = 1;
+      return b;
+    });
+    const comp = ctx.createDynamicsCompressor();
+    const makeup = ctx.createGain();
+    comp.threshold.value = 0; comp.ratio.value = 1; makeup.gain.value = 1; /* QM off */
+    let node = src;
+    filters.forEach(f => { node.connect(f); node = f; });
+    node.connect(comp); comp.connect(makeup); makeup.connect(ctx.destination);
+    graph = {filters, comp, makeup};
+    return graph;
+  }
+  let toolsBuilt = false;
+  bTools.onclick = () => {
+    tools.classList.toggle('open');
+    if(toolsBuilt) return;
+    toolsBuilt = true;
+    ensureGraph();
+    const presets = document.createElement('div'); presets.className = 'presets';
+    const eqBox = document.createElement('div');
+    const ui = buildEQUI(eqBox, (i, db) => { graph.filters[i].gain.value = db; });
+    buildPresetButtons(presets, vals => ui.set(vals));
+    const qmRow = document.createElement('div'); qmRow.className = 'row';
+    const qm = document.createElement('button'); qm.className = 'btn'; qm.textContent = 'Quick master: OFF';
+    let on = false;
+    qm.onclick = () => {
+      on = !on;
+      graph.comp.threshold.value = on ? -18 : 0;
+      graph.comp.ratio.value = on ? 3 : 1;
+      graph.makeup.gain.value = on ? dbToGain(4) : 1;
+      qm.textContent = 'Quick master: ' + (on ? 'ON' : 'OFF');
+      qm.classList.toggle('green', on);
+    };
+    const note = document.createElement('p'); note.className = 'hint';
+    note.textContent = 'Playback only — the stored file is never changed. Use Master to render a mastered copy.';
+    qmRow.appendChild(qm);
+    tools.appendChild(presets); tools.appendChild(eqBox); tools.appendChild(qmRow); tools.appendChild(note);
+  };
+  audio.addEventListener('play', () => { getCtx(); if(toolsBuilt) ensureGraph(); });
+  bEdit.onclick = () => loadLibraryToEditor(t, false);
+  bMaster.onclick = () => loadLibraryToEditor(t, true);
+  bMV.onclick = () => mvLoadFromTrack(t);
+  bDel.onclick = () => deleteTrack(t, card);
+  card.appendChild(tt); card.appendChild(meta); card.appendChild(audio);
+  card.appendChild(row); card.appendChild(tools);
+  return card;
+}
+function audioFileDuration(file){
+  return new Promise(res => {
+    const a = document.createElement('audio');
+    const u = URL.createObjectURL(file);
+    const done = d => { URL.revokeObjectURL(u); res(d); };
+    a.preload = 'metadata';
+    a.onloadedmetadata = () => done(isFinite(a.duration) ? fmtT(a.duration) : '');
+    a.onerror = () => done('');
+    setTimeout(() => done(''), 4000);
+    a.src = u;
+  });
+}
+$('#btnAFilePick').onclick = () => $('#aFile').click();
+$('#aFile').addEventListener('change', async () => {
+  const f = $('#aFile').files[0];
+  $('#aFile').value = '';
+  if(!f) return;
+  const name = await promptM('Upload audio file', 'Name for this track:', stripExt(f.name));
+  if(!name) return;
+  const progEl = $('#aUpProg');
+  try{
+    prog(progEl, 0.01, 'Preparing\u2026');
+    const dur = await audioFileDuration(f);
+    const extM = /\.[^.]+$/.exec(f.name);
+    const ext = extM ? extM[0] : '.wav';
+    await uploadAndVerify(f, name + ext, name, 'general', dur, progEl, 0.02);
+    loadLibrary();
+  }catch(e){ progHide(progEl); toast(e.message, true); }
+});
+async function loadLibrary(){
+  const box = $('#libList');
+  box.innerHTML = '<p class="hint" style="margin-top:14px;">Loading\u2026</p>';
+  try{
+    const all = await fetchTracks();
+    const tracks = all.filter(t => t.category !== 'video' && t.category !== 'photo');
+    box.innerHTML = '';
+    if(!tracks.length){ box.innerHTML = '<p class="hint" style="margin-top:14px;">No tracks yet. Record a take and upload it.</p>'; return; }
+    tracks.forEach(t => box.appendChild(trackCard(t)));
+  }catch(e){
+    box.innerHTML = '';
+    const p = document.createElement('p'); p.className = 'hint'; p.style.marginTop = '14px';
+    p.textContent = 'Could not load the library: ' + e.message;
+    box.appendChild(p);
+  }
+}
+$('#btnLibRefresh').onclick = loadLibrary;
+
+/* ================= VIDEO ================= */
+let vStream = null, vRec = null, vChunks = [], vBlob = null, vTrimBlob = null;
+let vName = 'session_' + dateStr(), vTimer = null, vT0 = 0, vExporting = false, vPreviewing = false;
+const vEdit = $('#vEdit'), vLive = $('#vLive');
+function pickVideoMime(){
+  return ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4']
+    .find(m => window.MediaRecorder && MediaRecorder.isTypeSupported(m)) || '';
+}
+async function startVideoRec(){
+  if(vBlob){
+    const ok = await confirmM('Record a new video?',
+      'Recording again will discard the previous video on this device. Upload or download it first if you want to keep it.',
+      'Discard & record');
+    if(!ok) return;
+  }
+  try{
+    vStream = await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280}}, audio:true});
+  }catch(e){ toast('Camera access refused: ' + e.message, true); return; }
+  vBlob = null; vTrimBlob = null; vChunks = [];
+  $('#vEditCard').hidden = true; $('#btnVUploadTrim').hidden = true; $('#vDl').hidden = true;
+  vLive.hidden = false; vLive.srcObject = vStream; vLive.play().catch(()=>{});
+  const mime = pickVideoMime();
+  vRec = new MediaRecorder(vStream, mime ? {mimeType:mime} : undefined);
+  vRec.ondataavailable = e => { if(e.data.size) vChunks.push(e.data); };
+  vRec.onstop = () => {
+    vBlob = new Blob(vChunks, {type: vRec.mimeType || 'video/webm'});
+    vStream.getTracks().forEach(tr => tr.stop());
+    vLive.srcObject = null; vLive.hidden = true;
+    clearInterval(vTimer);
+    $('#btnVRec').disabled = false; $('#btnVStop').disabled = true;
+    vName = 'session_' + dateStr();
+    setVideoEditorSrc(URL.createObjectURL(vBlob), vName, false);
+    toast('Video captured — trim it or upload it. It stays on this device until you upload.');
+  };
+  vRec.start(400);
+  vT0 = Date.now();
+  clearInterval(vTimer);
+  vTimer = setInterval(() => {
+    const s = Math.floor((Date.now() - vT0)/1000);
+    $('#vRecTime').textContent = String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+  }, 500);
+  $('#btnVRec').disabled = true; $('#btnVStop').disabled = false;
+}
+$('#btnVRec').onclick = startVideoRec;
+$('#btnVStop').onclick = () => { if(vRec && vRec.state !== 'inactive') vRec.stop(); };
+
+let vInT = 0, vOutT = 0;
+function setVideoEditorSrc(src, name, remote){
+  vExporting = false; vPreviewing = false;
+  vEdit.pause();
+  if(remote) vEdit.crossOrigin = 'anonymous';
+  else vEdit.removeAttribute('crossorigin');
+  vEdit.src = src;
+  vName = name;
+  $('#vPill').textContent = name;
+  $('#vEditCard').hidden = false;
+  $('#btnVUploadTrim').hidden = true;
+  vInT = 0; vOutT = 0;
+  $('#vIn').value = '0:00'; $('#vOut').value = '0:00';
+  vEdit.onloadedmetadata = () => {
+    vOutT = vEdit.duration;
+    $('#vOut').value = fmtT(vOutT);
+  };
+  $('#vEditCard').scrollIntoView({behavior:'smooth'});
+}
+$('#btnVSetIn').onclick = () => { vInT = vEdit.currentTime; $('#vIn').value = fmtT(vInT); };
+$('#btnVSetOut').onclick = () => { vOutT = vEdit.currentTime; $('#vOut').value = fmtT(vOutT); };
+$('#vIn').addEventListener('change', () => { const t = parseT($('#vIn').value); if(isFinite(t)) vInT = Math.max(0, t); });
+$('#vOut').addEventListener('change', () => { const t = parseT($('#vOut').value); if(isFinite(t)) vOutT = t; });
+vEdit.addEventListener('timeupdate', () => {
+  if(vPreviewing && vEdit.currentTime >= vOutT){ vEdit.pause(); vPreviewing = false; }
+});
+$('#btnVPreview').onclick = () => {
+  if(vOutT - vInT < 0.2){ toast('Set In and Out points first.', true); return; }
+  vPreviewing = true;
+  vEdit.currentTime = vInT;
+  vEdit.play().catch(()=>{});
+};
+$('#btnVExport').onclick = async () => {
+  if(vExporting) return;
+  if(vOutT - vInT < 0.2){ toast('Set In and Out points first.', true); return; }
+  if(!vEdit.captureStream && !vEdit.mozCaptureStream){ toast('This browser cannot export clips (no captureStream). Use Chrome.', true); return; }
+  vExporting = true; vPreviewing = false;
+  const progEl = $('#vProg');
+  try{
+    vEdit.pause();
+    vEdit.currentTime = vInT;
+    await new Promise((res, rej) => {
+      vEdit.onseeked = res;
+      setTimeout(res, 1500);
+    });
+    const stream = vEdit.captureStream ? vEdit.captureStream() : vEdit.mozCaptureStream();
+    const mime = pickVideoMime();
+    const mr = new MediaRecorder(stream, mime ? {mimeType:mime} : undefined);
+    const ch = [];
+    mr.ondataavailable = e => { if(e.data.size) ch.push(e.data); };
+    const done = new Promise(res => mr.onstop = res);
+    mr.start(300);
+    vEdit.volume = 1;
+    await vEdit.play();
+    prog(progEl, 0, 'Exporting 0%');
+    await new Promise(res => {
+      const iv = setInterval(() => {
+        const f = Math.min(1, (vEdit.currentTime - vInT) / (vOutT - vInT));
+        prog(progEl, f, 'Exporting ' + Math.round(f*100) + '%');
+        if(vEdit.currentTime >= vOutT || vEdit.ended){
+          clearInterval(iv);
+          vEdit.pause();
+          mr.stop();
+          res();
+        }
+      }, 120);
+    });
+    await done;
+    vTrimBlob = new Blob(ch, {type: mr.mimeType || 'video/webm'});
+    progHide(progEl);
+    $('#btnVUploadTrim').hidden = false;
+    setDl($('#vDl'), vTrimBlob, vName + '_clip.webm');
+    toast('Trimmed clip ready — upload it or download it.');
+  }catch(e){
+    progHide(progEl);
+    toast('Export failed: ' + e.message + (vEdit.crossOrigin ? ' (remote video needs the CORS proxy)' : ''), true);
+  }
+  vExporting = false;
+};
+async function uploadVideoBlob(blob, defName, progEl){
+  const name = await promptM('Save video', 'Name for the video:', defName);
+  if(!name) return;
+  const ext = (blob.type && blob.type.indexOf('mp4') !== -1) ? '.mp4' : '.webm';
+  try{
+    await uploadAndVerify(blob, name + ext, name, 'video', '', progEl, 0.02);
+    loadVideos();
+  }catch(e){ progHide(progEl); toast(e.message, true); }
+}
+async function postToYouTube(getBlob, filename){
+  try{
+    toast('Preparing the video\u2026');
+    const blob = await getBlob();
+    const file = new File([blob], filename, {type: blob.type || 'video/webm'});
+    /* On phones: system share sheet -> pick the YouTube app (posts directly). */
+    if(navigator.canShare && navigator.share && navigator.canShare({files:[file]})){
+      try{
+        await navigator.share({files:[file], title: filename});
+        toast('Shared \u2014 pick YouTube in the menu to post it.');
+        return;
+      }catch(e){ if(e.name === 'AbortError') return; /* else fall through to upload page */ }
+    }
+    /* On desktop: save the file and open YouTube's upload page to drop it in. */
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    window.open('https://www.youtube.com/upload', '_blank', 'noopener');
+    toast('Video saved to this device \u2014 drag it into the YouTube upload page that just opened.');
+  }catch(e){ toast('Could not prepare the video: ' + e.message, true); }
+}
+$('#btnVUploadFull').onclick = () => {
+  if(!vBlob){ toast('No local video recording to upload. Use "Upload a video file" for existing files.', true); return; }
+  uploadVideoBlob(vBlob, vName, $('#vProg'));
+};
+$('#btnVUploadTrim').onclick = () => {
+  if(!vTrimBlob) return;
+  uploadVideoBlob(vTrimBlob, vName + '_clip', $('#vProg'));
+};
+$('#btnVYouTube').onclick = () => {
+  const b = vTrimBlob || vBlob;
+  if(!b){ toast('Nothing to post yet \u2014 record or trim a video first.', true); return; }
+  const ext = (b.type && b.type.indexOf('mp4') !== -1) ? '.mp4' : '.webm';
+  postToYouTube(async () => b, vName + (vTrimBlob ? '_clip' : '') + ext);
+};
+$('#btnVDownload').onclick = () => {
+  const b = vTrimBlob || vBlob;
+  if(!b){ toast('Nothing to download yet.', true); return; }
+  setDl($('#vDl'), b, vName + (vTrimBlob ? '_clip' : '') + '.webm');
+  $('#vDl').click();
+};
+$('#btnVFilePick').onclick = () => $('#vFile').click();
+$('#vFile').addEventListener('change', () => {
+  const f = $('#vFile').files[0];
+  if(f) uploadVideoBlob(f, stripExt(f.name), $('#vUpProg'));
+  $('#vFile').value = '';
+});
+function videoCard(t){
+  const card = document.createElement('div'); card.className = 'track';
+  const tt = document.createElement('div'); tt.className = 'tt'; tt.textContent = t.title;
+  const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = t.created_at || '';
+  const v = document.createElement('video');
+  v.controls = true; v.preload = 'metadata'; v.playsInline = true;
+  v.crossOrigin = 'anonymous';
+  v.src = proxyUrl(t.id);
+  v.addEventListener('error', () => {
+    if(!v._fellBack && t.file_url){
+      v._fellBack = true;
+      v.removeAttribute('crossorigin');
+      v.src = t.file_url; /* playback works; trim export needs the /api/file proxy */
+    }
+  });
+  const row = document.createElement('div'); row.className = 'row';
+  const bEdit = document.createElement('button'); bEdit.className = 'btn admin-only'; bEdit.textContent = 'Edit / trim';
+  const bYT = document.createElement('button'); bYT.className = 'btn danger admin-only'; bYT.textContent = 'Post to YouTube';
+  bYT.onclick = () => {
+    const em = /\.(mp4|webm)$/i.exec(t.id || '');
+    postToYouTube(async () => {
+      let r = await fetch(proxyUrl(t.id));
+      if(!r.ok && t.file_url) r = await fetch(t.file_url);
+      if(!r.ok) throw new Error('could not download the video (' + r.status + ')');
+      return r.blob();
+    }, stripExt(t.title || 'video') + (em ? '.' + em[1].toLowerCase() : '.webm'));
+  };
+  const bDel = document.createElement('button'); bDel.className = 'btn danger admin-only'; bDel.textContent = 'Delete';
+  bEdit.onclick = () => { vBlob = null; vTrimBlob = null; setVideoEditorSrc(proxyUrl(t.id), stripExt(t.title), true); };
+  bDel.onclick = () => deleteTrack(t, card);
+  row.appendChild(bEdit); row.appendChild(bYT); row.appendChild(bDel);
+  card.appendChild(tt); card.appendChild(meta); card.appendChild(v); card.appendChild(row);
+  return card;
+}
+async function loadVideos(){
+  const box = $('#vidList');
+  box.innerHTML = '<p class="hint" style="margin-top:14px;">Loading\u2026</p>';
+  try{
+    const all = await fetchTracks();
+    const vids = all.filter(t => t.category === 'video');
+    box.innerHTML = '';
+    if(!vids.length){ box.innerHTML = '<p class="hint" style="margin-top:14px;">No videos yet. Record a session or upload a file.</p>'; return; }
+    vids.forEach(t => box.appendChild(videoCard(t)));
+  }catch(e){
+    box.innerHTML = '';
+    const p = document.createElement('p'); p.className = 'hint'; p.style.marginTop = '14px';
+    p.textContent = 'Could not load videos: ' + e.message;
+    box.appendChild(p);
+  }
+}
+$('#btnVidRefresh').onclick = loadVideos;
+
+/* ================= MUSIC VIDEO MAKER ================= */
+/* WebGL shader scenes + 2.5D photo layer + beat-synced cuts + cinematic titles.
+   Everything renders on-device; export = real-time canvas capture with the
+   track's audio baked in. Output goes to the video library (category 'video'). */
+
+const MV_W = 1280, MV_H = 720;
+let mvBuffer = null, mvName = 'video', mvCuts = [], mvSegs = [];
+let mvImages = [];              /* [{tex, url}] */
+let mvBlob = null, mvBlobExt = '.webm';
+let mvSrc = null, mvT0 = 0, mvRAF = 0, mvMode = null; /* 'preview' | 'render' */
+let mvCancel = false, mvRecorder = null;
+let mvBass = 0, mvMid = 0, mvHigh = 0, mvAnalyser = null, mvFreq = null;
+let mvTracksCache = [];
+
+const mvCanvas = $('#mvCanvas');
+mvCanvas.width = MV_W; mvCanvas.height = MV_H;
+const mvG = mvCanvas.getContext('2d');
+const mvGLCanvas = document.createElement('canvas');
+mvGLCanvas.width = MV_W; mvGLCanvas.height = MV_H;
+let mvGL = null, mvProg = null, mvUni = {}, mvBlankTex = null;
+
+/* ---------- shaders ---------- */
+const MV_VS = 'attribute vec2 aPos; void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }';
+const MV_FS = [
+'precision highp float;',
+'uniform vec2 uRes;',
+'uniform float uTime, uBass, uMid, uHigh, uImgMix;',
+'uniform int uScene, uGrade;',
+'uniform sampler2D uImg;',
+'uniform vec4 uImgRect;',
+'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+'float noise(vec2 p){',
+'  vec2 i = floor(p), f = fract(p);',
+'  vec2 u = f * f * (3.0 - 2.0 * f);',
+'  return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),',
+'             mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);',
+'}',
+'float fbm(vec2 p){',
+'  float v = 0.0, a = 0.5;',
+'  for(int i = 0; i < 5; i++){ v += a * noise(p); p = p * 2.03 + vec2(7.3, 3.1); a *= 0.5; }',
+'  return v;',
+'}',
+'void main(){',
+'  vec2 uv = gl_FragCoord.xy / uRes;',
+'  vec2 p = (gl_FragCoord.xy - 0.5 * uRes) / uRes.y;',
+'  float t = uTime;',
+'  vec2 q = p + vec2(sin(t * 0.043), cos(t * 0.037)) * 0.04;',   /* slow camera drift */
+'  vec3 col = vec3(0.0);',
+'  float glow = 0.0;',
+'  if(uScene == 0){',
+     /* EMBER DRIFT — warm fog + rising sparks */
+'    float f = fbm(q * 1.8 + vec2(0.0, -t * 0.05));',
+'    float f2 = fbm(q * 3.5 + vec2(t * 0.02, -t * 0.11));',
+'    col = mix(vec3(0.015, 0.010, 0.008), vec3(0.42, 0.17, 0.05), pow(f, 1.6) * (0.55 + uBass * 0.9));',
+'    col += vec3(0.30, 0.10, 0.02) * pow(f2, 3.0) * (0.4 + uMid);',
+'    for(int i = 0; i < 24; i++){',
+'      float fi = float(i);',
+'      float sp = 0.05 + hash(vec2(fi, 1.7)) * 0.12;',
+'      vec2 ep = vec2((hash(vec2(fi, 3.3)) * 2.0 - 1.0) * 1.1 + sin(t * 0.3 + fi) * 0.05,',
+'                     mod(hash(vec2(fi, 9.1)) * 2.0 + t * sp, 1.6) - 0.8);',
+'      float d = length(q - ep);',
+'      glow += (0.0016 + uBass * 0.0026) / (d * d + 0.0004) * (0.5 + 0.5 * sin(t * 3.0 + fi * 2.2));',
+'    }',
+'    col += vec3(1.0, 0.55, 0.18) * glow * 0.02;',
+'  } else if(uScene == 1){',
+     /* LIGHT RAYS — god rays through haze */
+'    vec2 dv = q - vec2(0.0, 0.62);',
+'    float a = atan(dv.x, -dv.y);',
+'    float r = length(dv);',
+'    float rays = fbm(vec2(a * 4.0, 0.3 * t)) * fbm(vec2(a * 9.0 + 5.0, -0.13 * t));',
+'    rays = pow(max(rays, 0.0), 1.8);',
+'    float beam = rays * smoothstep(1.6, 0.1, r) * (0.7 + uMid * 1.1 + uBass * 0.5);',
+'    float haze = fbm(q * 2.2 + vec2(t * 0.03, -t * 0.02)) * 0.5;',
+'    col = vec3(0.012, 0.011, 0.016);',
+'    col += vec3(0.95, 0.78, 0.45) * beam * 0.8;',
+'    col += vec3(0.25, 0.20, 0.13) * haze;',
+'    col += vec3(1.0, 0.85, 0.55) * smoothstep(0.5, 0.0, r) * 0.25 * (1.0 + uBass);',
+'  } else {',
+     /* STORM NEBULA — domain-warped clouds + flicker */
+'    vec2 w = vec2(fbm(q * 1.5 + vec2(0.0, t * 0.05)), fbm(q * 1.5 + vec2(5.2, -t * 0.04)));',
+'    float n = fbm(q * 1.9 + 2.6 * w + vec2(t * 0.02, 0.0));',
+'    col = mix(vec3(0.010, 0.014, 0.028), vec3(0.10, 0.16, 0.34), pow(n, 1.4) * (0.7 + uBass * 0.8));',
+'    col = mix(col, vec3(0.55, 0.24, 0.10), pow(fbm(q * 2.6 - 2.0 * w), 3.0) * (0.4 + uHigh * 0.9));',
+'    float flash = pow(uHigh, 3.0) * 0.5 + pow(uBass, 4.0) * 0.3;',
+'    col += vec3(0.8, 0.85, 1.0) * flash * pow(n, 2.0);',
+'  }',
+   /* 2.5D still composite — Ken Burns rect computed in JS */
+'  if(uImgMix > 0.001){',
+'    vec2 iuv = uImgRect.xy + uv * uImgRect.zw;',
+'    iuv += (uv - 0.5) * uBass * 0.004;',                          /* micro bass parallax */
+'    vec3 ic = texture2D(uImg, vec2(iuv.x, 1.0 - iuv.y)).rgb;',
+'    col = mix(col, ic, uImgMix * 0.92);',
+'  }',
+   /* grade */
+'  float lum = dot(col, vec3(0.299, 0.587, 0.114));',
+'  if(uGrade == 0){',
+'    col = mix(vec3(lum), col, 0.85);',
+'    col = pow(col, vec3(1.12, 1.05, 1.0));',
+'    col *= vec3(1.06, 0.98, 0.86);',
+'  } else if(uGrade == 1){',
+'    col += vec3(0.0, 0.08, 0.10) * (1.0 - lum) * 0.35 + vec3(0.10, 0.04, 0.0) * lum * 0.4;',
+'  } else if(uGrade == 3){',
+     /* TOON INK: gamma-lift, gentle quantize, derivative-based ink lines */
+'    vec3 tc = pow(max(col, vec3(0.0)), vec3(0.82));',
+'    vec3 qc = floor(tc * 6.0 + 0.5) / 6.0;',
+'    float tl = dot(tc, vec3(0.299, 0.587, 0.114));',
+'    float e = 0.0;',
+'#ifdef HAS_DERIV',
+'    e = fwidth(tl) * 7.0 + fwidth(dot(qc, vec3(0.333))) * 1.5;',
+'#endif',
+'    float ink = smoothstep(0.10, 0.30, e);',
+'    col = mix(qc * vec3(1.04, 0.99, 0.92), vec3(0.04, 0.03, 0.03), min(ink, 0.85));',
+'  } else {',
+'    col = mix(col, vec3(lum), 0.7);',
+'    col = pow(col, vec3(1.15)) * 1.12;',
+'  }',
+   /* vignette + film grain */
+'  col *= smoothstep(1.35, 0.38, length(p));',
+'  float gAmp = (uGrade == 3) ? 0.018 : 0.055;',
+'  col += (hash(uv * uRes + fract(t) * 61.7) - 0.5) * gAmp;',
+'  gl_FragColor = vec4(max(col, vec3(0.0)), 1.0);',
+'}'
+].join('\n');
+
+function mvInitGL(){
+  if(mvGL) return true;
+  const gl = mvGLCanvas.getContext('webgl', {antialias:false, preserveDrawingBuffer:false});
+  if(!gl){ toast('This browser has no WebGL — the scene engine cannot run.', true); return false; }
+  const derivExt = gl.getExtension('OES_standard_derivatives');
+  const fsSrc = (derivExt ? '#extension GL_OES_standard_derivatives : enable\n#define HAS_DERIV 1\n' : '') + MV_FS;
+  function sh(type, srcTxt){
+    const s = gl.createShader(type);
+    gl.shaderSource(s, srcTxt); gl.compileShader(s);
+    if(!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+      throw new Error('Shader: ' + gl.getShaderInfoLog(s));
+    return s;
+  }
+  try{
+    const pr = gl.createProgram();
+    gl.attachShader(pr, sh(gl.VERTEX_SHADER, MV_VS));
+    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fsSrc));
+    gl.linkProgram(pr);
+    if(!gl.getProgramParameter(pr, gl.LINK_STATUS)) throw new Error('Link: ' + gl.getProgramInfoLog(pr));
+    gl.useProgram(pr);
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(pr, 'aPos');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    ['uRes','uTime','uBass','uMid','uHigh','uImgMix','uScene','uGrade','uImg','uImgRect']
+      .forEach(n => mvUni[n] = gl.getUniformLocation(pr, n));
+    gl.viewport(0, 0, MV_W, MV_H);
+    gl.uniform2f(mvUni.uRes, MV_W, MV_H);
+    gl.uniform1i(mvUni.uImg, 0);
+    /* 1x1 black fallback texture so the sampler always has data */
+    mvBlankTex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, mvBlankTex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0,0,0,255]));
+    mvGL = gl; mvProg = pr;
+    return true;
+  }catch(e){ toast('Scene engine failed to start: ' + e.message, true); return false; }
+}
+function mvMakeTexture(imgEl){
+  const gl = mvGL;
+  /* downscale to <=1280 so phone GPUs stay happy */
+  const scale = Math.min(1, 1280 / Math.max(imgEl.naturalWidth, imgEl.naturalHeight));
+  const w = Math.max(1, Math.round(imgEl.naturalWidth * scale));
+  const h = Math.max(1, Math.round(imgEl.naturalHeight * scale));
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  c.getContext('2d').drawImage(imgEl, 0, 0, w, h);
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  return {tex, aspect: w / h};
+}
+
+/* ---------- beat / cut detection (offline, once per loaded track) ---------- */
+function mvDetectCuts(buf){
+  const d = buf.getChannelData(0), rate = buf.sampleRate;
+  const win = Math.floor(rate * 0.05);
+  const e = [];
+  for(let i = 0; i < d.length; i += win){
+    let s = 0;
+    const end = Math.min(d.length, i + win);
+    for(let j = i; j < end; j++) s += d[j] * d[j];
+    e.push(Math.sqrt(s / win));
+  }
+  const cuts = [];
+  let last = -10;
+  for(let i = 8; i < e.length; i++){
+    let avg = 0;
+    for(let j = i - 8; j < i; j++) avg += e[j];
+    avg /= 8;
+    const t = i * win / rate;
+    if(e[i] > avg * 1.45 && e[i] > 0.04 && t - last > 2.4){ cuts.push(t); last = t; }
+  }
+  if(cuts.length < 3)
+    for(let t = 5; t < buf.duration - 3; t += 6) cuts.push(t);
+  return cuts.sort((a, b) => a - b);
+}
+function segRand(i, k){ const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return x - Math.floor(x); }
+function mvBuildSegments(){
+  mvSegs = [];
+  if(!mvBuffer) return;
+  const times = [0].concat(mvCuts.filter(t => t > 2 && t < mvBuffer.duration - 1), [mvBuffer.duration]);
+  let imgIdx = 0;
+  for(let i = 0; i < times.length - 1; i++){
+    /* opening + every 4th segment stays pure scene so the cinema breathes */
+    const pure = !mvImages.length || i === 0 || (i % 4 === 0);
+    mvSegs.push({
+      a: times[i], b: times[i + 1],
+      img: pure ? -1 : (imgIdx++ % mvImages.length),
+      z0: 1.06 + segRand(i, 1) * 0.10,       /* Ken Burns zoom start/end */
+      z1: 1.12 + segRand(i, 2) * 0.14,
+      px: segRand(i, 3), py: segRand(i, 4),  /* pan start (0..1 within slack) */
+      qx: segRand(i, 5), qy: segRand(i, 6)   /* pan end */
+    });
+  }
+}
+
+/* ---------- title overlay (2D pass on top of the GL frame) ---------- */
+function mvEnv(t, a, b, c, d){
+  if(t < a || t > d) return 0;
+  if(t < b) return (t - a) / Math.max(0.001, b - a);
+  if(t > c) return 1 - (t - c) / Math.max(0.001, d - c);
+  return 1;
+}
+function mvWrap(g, text, maxW){
+  const words = String(text).split(/\s+/), lines = [];
+  let cur = '';
+  words.forEach(w => {
+    const tryLine = cur ? cur + ' ' + w : w;
+    if(g.measureText(tryLine).width > maxW && cur){ lines.push(cur); cur = w; }
+    else cur = tryLine;
+  });
+  if(cur) lines.push(cur);
+  return lines.slice(0, 3);
+}
+function mvDrawOverlay(t, dur){
+  const g = mvG, w = MV_W, h = MV_H;
+  /* letterbox */
+  const bar = Math.round(h * 0.105);
+  g.fillStyle = '#000';
+  g.fillRect(0, 0, w, bar);
+  g.fillRect(0, h - bar, w, bar);
+  const line = $('#mvLine').value.trim();
+  const ctxLine = $('#mvContext').value.trim();
+  const credit = $('#mvCredit').value.trim();
+  /* movie line — opening title card */
+  if(line){
+    const tEnd = Math.min(12, Math.max(6, dur * 0.22));
+    const a = mvEnv(t, 1.2, 2.8, tEnd - 1.6, tEnd);
+    if(a > 0){
+      g.save();
+      g.globalAlpha = a;
+      const zoom = 1 + 0.018 * (t / Math.max(1, tEnd));
+      g.translate(w / 2, h / 2); g.scale(zoom, zoom);
+      g.font = '64px "Bebas Neue", sans-serif';
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      const lines = mvWrap(g, line.toUpperCase(), w * 0.7);
+      g.shadowColor = 'rgba(224,168,62,.55)'; g.shadowBlur = 26;
+      g.fillStyle = '#f1e7d3';
+      lines.forEach((L, i) => g.fillText(L, 0, (i - (lines.length - 1) / 2) * 74));
+      g.shadowBlur = 0;
+      g.fillStyle = '#e0a83e';
+      g.fillRect(-60, (lines.length / 2) * 74 + 8, 120, 3);
+      g.restore();
+    }
+  }
+  /* context line — mid-video */
+  if(ctxLine && dur > 24){
+    const m0 = dur * 0.48;
+    const a = mvEnv(t, m0, m0 + 1.4, m0 + 6.2, m0 + 7.6);
+    if(a > 0){
+      g.save();
+      g.globalAlpha = a * 0.92;
+      g.font = '26px Inter, sans-serif';
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.shadowColor = 'rgba(0,0,0,.8)'; g.shadowBlur = 12;
+      g.fillStyle = '#d8cdb6';
+      mvWrap(g, ctxLine, w * 0.62).forEach((L, i) => g.fillText(L, w / 2, h - bar - 66 + i * 34));
+      g.restore();
+    }
+  }
+  /* credit — closing card */
+  if(credit){
+    const a = mvEnv(t, dur - 6, dur - 4.6, dur - 1.4, dur - 0.3);
+    if(a > 0){
+      g.save();
+      g.globalAlpha = a;
+      g.font = '54px "Bebas Neue", sans-serif';
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.shadowColor = 'rgba(224,168,62,.5)'; g.shadowBlur = 22;
+      g.fillStyle = '#e0a83e';
+      g.fillText(credit.toUpperCase(), w / 2, h / 2);
+      g.restore();
+    }
+  }
+}
+
+/* ---------- per-frame render ---------- */
+function mvSegAt(t){
+  for(let i = 0; i < mvSegs.length; i++)
+    if(t >= mvSegs[i].a && t < mvSegs[i].b) return mvSegs[i];
+  return mvSegs[mvSegs.length - 1] || null;
+}
+function mvDrawFrame(t, dur){
+  const gl = mvGL;
+  /* audio-reactive uniforms with smoothing */
+  if(mvAnalyser){
+    mvAnalyser.getByteFrequencyData(mvFreq);
+    const avg = (a, b) => { let s = 0; for(let i = a; i < b; i++) s += mvFreq[i]; return s / (b - a) / 255; };
+    mvBass += (avg(1, 9) - mvBass) * 0.25;
+    mvMid  += (avg(10, 60) - mvMid) * 0.25;
+    mvHigh += (avg(60, 200) - mvHigh) * 0.25;
+  }
+  gl.uniform1f(mvUni.uTime, t);
+  gl.uniform1f(mvUni.uBass, mvBass);
+  gl.uniform1f(mvUni.uMid, mvMid);
+  gl.uniform1f(mvUni.uHigh, mvHigh);
+  gl.uniform1i(mvUni.uScene, +$('#mvScene').value);
+  gl.uniform1i(mvUni.uGrade, +$('#mvGrade').value);
+  /* 2.5D still for this segment */
+  const seg = mvSegAt(t);
+  let mix = 0;
+  gl.activeTexture(gl.TEXTURE0);
+  if(seg && seg.img >= 0 && mvImages[seg.img]){
+    const im = mvImages[seg.img];
+    const segT = (t - seg.a) / Math.max(0.001, seg.b - seg.a);
+    mix = mvEnv(t, seg.a, seg.a + 0.5, seg.b - 0.5, seg.b);
+    const z = seg.z0 + (seg.z1 - seg.z0) * segT;
+    const A = MV_W / MV_H, ai = im.aspect;
+    let sx, sy;
+    if(ai >= A){ sy = 1; sx = A / ai; } else { sx = 1; sy = ai / A; }
+    sx /= z; sy /= z;
+    const ox = (seg.px + (seg.qx - seg.px) * segT) * (1 - sx);
+    const oy = (seg.py + (seg.qy - seg.py) * segT) * (1 - sy);
+    gl.bindTexture(gl.TEXTURE_2D, im.tex);
+    gl.uniform4f(mvUni.uImgRect, ox, oy, sx, sy);
+  } else {
+    gl.bindTexture(gl.TEXTURE_2D, mvBlankTex);
+    gl.uniform4f(mvUni.uImgRect, 0, 0, 1, 1);
+  }
+  gl.uniform1f(mvUni.uImgMix, mix);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  /* composite + titles */
+  mvG.drawImage(mvGLCanvas, 0, 0, MV_W, MV_H);
+  mvDrawOverlay(t, dur);
+}
+
+/* ---------- playback / render loops ---------- */
+function mvCleanup(){
+  cancelAnimationFrame(mvRAF);
+  mvSrc = null; mvAnalyser = null; mvMode = null;
+}
+function mvStop(){
+  if(mvSrc){ mvCancel = true; try{ mvSrc.stop(); }catch(e){} }
+}
+function mvStart(mode){
+  if(!mvBuffer){ toast('Load a track first.', true); return; }
+  if(!mvInitGL()) return;
+  if(mvMode){ toast('Already running — stop it first.', true); return; }
+  if(mode === 'render' && !mvCanvas.captureStream){
+    toast('This browser cannot record the canvas (no captureStream). Use Chrome.', true); return;
+  }
+  document.fonts && document.fonts.load('64px "Bebas Neue"').catch(() => {});
+  mvBuildSegments();
+  mvCancel = false; mvMode = mode;
+  mvBass = mvMid = mvHigh = 0;
+  const ctx = getCtx();
+  mvSrc = ctx.createBufferSource();
+  mvSrc.buffer = mvBuffer;
+  mvAnalyser = ctx.createAnalyser();
+  mvAnalyser.fftSize = 1024;
+  mvAnalyser.smoothingTimeConstant = 0.7;
+  mvFreq = new Uint8Array(mvAnalyser.frequencyBinCount);
+  mvSrc.connect(mvAnalyser);
+  mvAnalyser.connect(ctx.destination); /* monitor while it runs */
+  const dur = mvBuffer.duration;
+  const progEl = $('#mvProg');
+  let recDone = null;
+  if(mode === 'render'){
+    mvBlob = null;
+    $('#btnMvUpload').hidden = true; $('#btnMvYouTube').hidden = true; $('#mvDl').hidden = true;
+    const stream = mvCanvas.captureStream(30);
+    const adest = ctx.createMediaStreamDestination();
+    mvAnalyser.connect(adest);
+    const at = adest.stream.getAudioTracks()[0];
+    if(at) stream.addTrack(at);
+    const mime = pickVideoMime();
+    mvRecorder = new MediaRecorder(stream, mime ? {mimeType: mime, videoBitsPerSecond: 6000000} : undefined);
+    const chunks = [];
+    mvRecorder.ondataavailable = e => { if(e.data.size) chunks.push(e.data); };
+    recDone = new Promise(res => { mvRecorder.onstop = () => res(chunks); });
+    mvRecorder.start(400);
+  }
+  mvT0 = ctx.currentTime + 0.08;
+  mvSrc.start(mvT0);
+  (function loop(){
+    const t = Math.max(0, Math.min(dur, ctx.currentTime - mvT0));
+    mvDrawFrame(t, dur);
+    if(mode === 'render') prog(progEl, Math.min(0.88, t / dur * 0.88), 'Rendering ' + Math.round(t / dur * 100) + '%');
+    if(mvMode) mvRAF = requestAnimationFrame(loop);
+  })();
+  mvSrc.onended = async () => {
+    mvCleanup();
+    if(mode !== 'render'){ if(!mvCancel) toast('Preview finished.'); return; }
+    prog(progEl, 0.9, 'Finalizing\u2026');
+    try{ mvRecorder.stop(); }catch(e){}
+    const chunks = await recDone;
+    if(mvCancel){ progHide(progEl); toast('Render cancelled — nothing was saved.'); return; }
+    mvBlob = new Blob(chunks, {type: (mvRecorder && mvRecorder.mimeType) || 'video/webm'});
+    mvBlobExt = (mvBlob.type.indexOf('mp4') !== -1) ? '.mp4' : '.webm';
+    progHide(progEl);
+    const fn = stripExt(mvName) + '_mv_' + dateStr() + mvBlobExt;
+    setDl($('#mvDl'), mvBlob, fn);
+    $('#btnMvUpload').hidden = false;
+    $('#btnMvYouTube').hidden = false;
+    toast('Music video rendered — it stays on this device until you upload it.');
+  };
+}
+$('#btnMvPreview').onclick = () => mvStart('preview');
+$('#btnMvRender').onclick = () => mvStart('render');
+$('#btnMvStopPrev').onclick = mvStop;
+$('#btnMvYouTube').onclick = () => {
+  if(!mvBlob){ toast('Render the video first.', true); return; }
+  postToYouTube(async () => mvBlob, stripExt(mvName) + '_mv_' + dateStr() + mvBlobExt);
+};
+$('#btnMvUpload').onclick = () => {
+  if(!mvBlob){ toast('Render the video first.', true); return; }
+  uploadVideoBlob(mvBlob, stripExt(mvName) + '_mv_' + dateStr(), $('#mvProg'));
+};
+
+/* ---------- track + photo loading ---------- */
+function mvSetBuffer(buf, name){
+  mvBuffer = buf; mvName = name || 'video';
+  mvCuts = mvDetectCuts(buf);
+  $('#mvPill').textContent = mvName + ' \u00b7 ' + fmtT(buf.duration);
+  if(mvInitGL()) mvDrawFrame(0.01, buf.duration);
+  toast('"' + mvName + '" ready \u2014 ' + mvCuts.length + ' beat cuts found.');
+}
+async function mvTabOpen(){
+  if(mvInitGL() && !mvBuffer) mvDrawFrame(0.01, 60); /* idle scene preview */
+  try{
+    mvTracksCache = (await fetchTracks()).filter(t => t.category !== 'video' && t.category !== 'photo');
+    const sel = $('#mvTrackSel');
+    const keep = sel.value;
+    sel.innerHTML = '<option value="">Choose a track\u2026</option>';
+    mvTracksCache.forEach(t => {
+      const o = document.createElement('option');
+      o.value = t.id; o.textContent = t.title + (t.duration ? ' (' + t.duration + ')' : '');
+      sel.appendChild(o);
+    });
+    sel.value = keep;
+  }catch(e){ /* library offline — editor track still works */ }
+}
+async function mvLoadFromTrack(t){
+  switchTab('mv');
+  const progEl = $('#mvLoadProg');
+  try{
+    prog(progEl, 0.15, 'Downloading\u2026');
+    let res = await fetch(proxyUrl(t.id));
+    if(!res.ok && t.file_url) res = await fetch(t.file_url);
+    if(!res.ok) throw new Error('audio fetch failed (' + res.status + ')');
+    const ab = await res.arrayBuffer();
+    prog(progEl, 0.7, 'Decoding\u2026');
+    const buf = await getCtx().decodeAudioData(ab);
+    progHide(progEl);
+    mvSetBuffer(buf, t.title || 'track');
+  }catch(e){ progHide(progEl); toast('Could not load the track: ' + e.message, true); }
+}
+$('#btnMvLoad').onclick = () => {
+  const id = $('#mvTrackSel').value;
+  if(!id){ toast('Choose a track from the list first.', true); return; }
+  const t = mvTracksCache.find(x => x.id === id);
+  if(!t){ toast('Track not found \u2014 refresh the list.', true); return; }
+  mvLoadFromTrack(t);
+};
+$('#btnMvUseEditor').onclick = () => {
+  if(!edBuffer){ toast('Nothing is loaded in the editor.', true); return; }
+  mvSetBuffer(edBuffer, edName);
+};
+function mvRefreshThumbs(){
+  const box = $('#mvThumbs');
+  box.innerHTML = '';
+  mvImages.forEach((im, i) => {
+    const d = document.createElement('div'); d.className = 'th';
+    const img = document.createElement('img'); img.src = im.url; img.alt = 'photo ' + (i + 1);
+    const x = document.createElement('button'); x.textContent = '\u00d7';
+    x.onclick = () => {
+      if(mvGL) mvGL.deleteTexture(im.tex);
+      URL.revokeObjectURL(im.url);
+      mvImages.splice(i, 1);
+      mvRefreshThumbs();
+    };
+    d.appendChild(img); d.appendChild(x);
+    box.appendChild(d);
+  });
+  $('#mvPicCount').textContent = mvImages.length + ' photo' + (mvImages.length === 1 ? '' : 's');
+}
+$('#btnMvPics').onclick = () => $('#mvPics').click();
+$('#mvPics').addEventListener('change', async () => {
+  const files = Array.from($('#mvPics').files || []);
+  $('#mvPics').value = '';
+  if(!files.length) return;
+  if(!mvInitGL()) return;
+  for(const f of files.slice(0, 16 - mvImages.length)){
+    try{
+      const url = URL.createObjectURL(f);
+      const img = new Image();
+      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+      const t = mvMakeTexture(img);
+      mvImages.push({tex: t.tex, aspect: t.aspect, url});
+    }catch(e){ toast('Could not read ' + f.name, true); }
+  }
+  mvRefreshThumbs();
+});
+$('#btnMvClearPics').onclick = () => {
+  mvImages.forEach(im => { if(mvGL) mvGL.deleteTexture(im.tex); URL.revokeObjectURL(im.url); });
+  mvImages = [];
+  mvRefreshThumbs();
+};
+
+/* ================= PHOTO GALLERY ================= */
+function photoCard(t){
+  const d = document.createElement('div'); d.className = 'ph';
+  const img = document.createElement('img');
+  img.loading = 'lazy'; img.alt = t.title;
+  img.src = proxyUrl(t.id);
+  img.onerror = () => { if(!img._fb && t.file_url){ img._fb = true; img.src = t.file_url; } };
+  const del = document.createElement('button'); del.className = 'admin-only'; del.textContent = '\u00d7';
+  del.title = 'Delete this photo';
+  del.onclick = ev => { ev.stopPropagation(); deleteTrack(t, d, loadPhotos); };
+  d.appendChild(img); d.appendChild(del);
+  d.onclick = () => {
+    phCurrent = {t: t, el: d};
+    $('#phBig').src = img.src;
+    $('#phCap').textContent = t.title || '';
+    $('#phBox').hidden = false;
+  };
+  return d;
+}
+async function loadPhotos(){
+  const box = $('#phGrid');
+  box.innerHTML = '<p class="hint">Loading\u2026</p>';
+  try{
+    const all = await fetchTracks();
+    const ph = all.filter(t => t.category === 'photo');
+    box.innerHTML = '';
+    if(!ph.length){ box.innerHTML = '<p class="hint">No photos yet.</p>'; return; }
+    ph.forEach(t => box.appendChild(photoCard(t)));
+  }catch(e){
+    box.innerHTML = '';
+    const p = document.createElement('p'); p.className = 'hint';
+    p.textContent = 'Could not load photos: ' + e.message;
+    box.appendChild(p);
+  }
+}
+let phCurrent = null;
+$('#phBox').onclick = () => { $('#phBox').hidden = true; };
+$('#phDelete').onclick = ev => {
+  ev.stopPropagation();
+  if(!phCurrent) return;
+  $('#phBox').hidden = true;
+  deleteTrack(phCurrent.t, phCurrent.el, loadPhotos);
+};
+$('#btnPhRefresh').onclick = loadPhotos;
+$('#btnPhPick').onclick = () => $('#phFile').click();
+$('#phFile').addEventListener('change', async () => {
+  const files = Array.from($('#phFile').files || []);
+  $('#phFile').value = '';
+  if(!files.length) return;
+  const progEl = $('#phProg');
+  for(let i = 0; i < files.length; i++){
+    const f = files[i];
+    try{
+      prog(progEl, 0.02, 'Photo ' + (i + 1) + ' of ' + files.length + '\u2026');
+      const extM = /\.[^.]+$/.exec(f.name);
+      await uploadAndVerify(f, stripExt(f.name) + (extM ? extM[0] : '.jpg'), stripExt(f.name), 'photo', '', progEl, 0.05);
+    }catch(e){ progHide(progEl); toast(e.message, true); break; }
+  }
+  loadPhotos();
+});
+
+/* ================= COMMENTS ================= */
+async function loadComments(){
+  const box = $('#comments');
+  try{
+    const r = await fetch(WORKER + '/api/comments');
+    if(!r.ok) throw new Error(r.status);
+    const list = await r.json();
+    box.innerHTML = '';
+    list.forEach(c => {
+      const d = document.createElement('div'); d.className = 'comment';
+      const n = document.createElement('div'); n.className = 'cn'; n.textContent = c.name || 'Anonymous';
+      const m = document.createElement('div'); m.className = 'cm'; m.textContent = c.message;
+      const dt = document.createElement('div'); dt.className = 'cd'; dt.textContent = c.created_at || '';
+      d.appendChild(n); d.appendChild(m); d.appendChild(dt);
+      box.appendChild(d);
+    });
+    if(!list.length) box.innerHTML = '<p class="hint">No messages yet — be the first.</p>';
+  }catch(e){
+    box.innerHTML = '<p class="hint">Could not load messages right now.</p>';
+  }
+}
+$('#btnComment').onclick = async () => {
+  const msg = $('#cMsg').value.trim();
+  if(!msg){ toast('Write a message first.', true); return; }
+  try{
+    const r = await fetch(WORKER + '/api/comments', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({name: $('#cName').value.trim() || 'Anonymous', message: msg})
+    });
+    if(!r.ok) throw new Error('post failed (' + r.status + ')');
+    $('#cMsg').value = '';
+    toast('Message posted \u2714');
+    loadComments();
+  }catch(e){ toast('Could not post: ' + e.message, true); }
+};
+
+/* ================= INIT ================= */
+try{
+  const saved = sessionStorage.getItem('kreo_admin');
+  if(saved){ sitePass = saved; document.body.classList.add('admin'); $('#btnAdmin').textContent = 'log out'; }
+}catch(e){}
+drawWave();
+switchTab(isAdmin() ? 'rec' : 'lib');
+</script>
+</body>
+</html>
